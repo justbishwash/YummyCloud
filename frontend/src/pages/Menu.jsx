@@ -251,9 +251,9 @@ function Menu() {
         if (selectedItem.images) allImages.push(...selectedItem.images);
 
         return (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div className="fixed inset-0 z-50 flex items-end justify-center pb-16">
             <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedItem(null)} />
-            <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[70vh] flex flex-col">
+            <div className="relative bg-white rounded-t-3xl w-full sm:max-w-md max-h-[65vh] flex flex-col">
               {/* Scrollable content */}
               <div className="overflow-y-auto flex-1">
               {/* Image Slider */}
