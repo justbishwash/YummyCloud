@@ -21,6 +21,16 @@ function Menu() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
   const addItem = useCartStore((state) => state.addItem);
+
+  // Lock body scroll when popup is open
+  useEffect(() => {
+    if (selectedItem) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedItem]);
   const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
@@ -210,7 +220,7 @@ function Menu() {
                       Rs. {Number(item.price)}
                     </span>
                     <button
-                      onClick={() => handleAddToCart(item)}
+                      onClick={(e) => { e.stopPropagation(); handleAddToCart(item); }}
                       className="bg-primary/10 text-primary text-xs px-3.5 py-1.5 rounded-lg font-bold active:scale-90 active:bg-primary active:text-white transition-all"
                     >
                       + ADD
@@ -243,11 +253,13 @@ function Menu() {
         return (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
             <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedItem(null)} />
-            <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[70vh] overflow-y-auto">
+            <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[70vh] flex flex-col">
+              {/* Scrollable content */}
+              <div className="overflow-y-auto flex-1">
               {/* Image Slider */}
               {allImages.length > 0 && (
                 <div className="relative">
-                  <div className="w-full h-56 overflow-hidden rounded-t-3xl sm:rounded-t-2xl bg-gray-100">
+                  <div className="w-full h-48 overflow-hidden rounded-t-3xl sm:rounded-t-2xl bg-gray-100">
                     <img src={`${storageUrl}${allImages[slideIndex] || allImages[0]}`} alt="" className="w-full h-full object-cover" />
                   </div>
                   {allImages.length > 1 && (
@@ -278,9 +290,14 @@ function Menu() {
                 {selectedItem.description && (
                   <p className="text-sm text-gray-500 mt-3 leading-relaxed">{selectedItem.description}</p>
                 )}
+              </div>
+              </div>
+
+              {/* Fixed bottom button */}
+              <div className="p-4 border-t border-gray-100 shrink-0">
                 <button
                   onClick={() => { handleAddToCart(selectedItem); setSelectedItem(null); }}
-                  className="w-full mt-5 bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
+                  className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
                 >
                   + Add to Cart
                 </button>
