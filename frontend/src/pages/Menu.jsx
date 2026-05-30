@@ -298,10 +298,14 @@ function Menu() {
                 {selectedItem.description && (
                   <p className="text-sm text-gray-500 mt-3 leading-relaxed">{selectedItem.description}</p>
                 )}
+              </div>
+              </div>
 
+              {/* Fixed bottom: variants + button */}
+              <div className="border-t border-gray-100 shrink-0">
                 {/* Variant Selectors */}
                 {hasVariants && (
-                  <div className="mt-4 space-y-3">
+                  <div className="px-5 pt-4 pb-2 space-y-3">
                     {selectedItem.variants.map((group, gi) => (
                       <div key={gi}>
                         <label className="text-xs font-semibold text-gray-600 mb-1.5 block">{group.name}</label>
@@ -324,26 +328,24 @@ function Menu() {
                     ))}
                   </div>
                 )}
-              </div>
-              </div>
 
-              {/* Fixed bottom button */}
-              <div className="p-4 border-t border-gray-100 shrink-0">
-                <button
-                  onClick={() => {
-                    addItem({
-                      id: selectedItem.id,
-                      name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
-                      price: variantPrice,
-                      image: selectedItem.image || null,
-                    });
-                    setSelectedItem(null);
-                    setSelectedVariants({});
-                  }}
-                  className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
-                >
-                  + Add to Cart • Rs. {variantPrice}
-                </button>
+                <div className="px-4 pb-4 pt-2">
+                  <button
+                    onClick={() => {
+                      addItem({
+                        id: selectedItem.id,
+                        name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
+                        price: variantPrice,
+                        image: selectedItem.image || null,
+                      });
+                      setSelectedItem(null);
+                      setSelectedVariants({});
+                    }}
+                    className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
+                  >
+                    + Add to Cart • Rs. {variantPrice}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
