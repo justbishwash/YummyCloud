@@ -8,7 +8,7 @@ function MenuItems() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editItem, setEditItem] = useState(null);
-  const [form, setForm] = useState({ name: '', name_ne: '', description: '', description_ne: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null });
+  const [form, setForm] = useState({ name: '', description: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null });
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -23,9 +23,7 @@ function MenuItems() {
     try {
       const formData = new FormData();
       formData.append('name', form.name);
-      formData.append('name_ne', form.name_ne || '');
       formData.append('description', form.description || '');
-      formData.append('description_ne', form.description_ne || '');
       formData.append('price', form.price);
       formData.append('category_id', form.category_id);
       formData.append('is_available', form.is_available ? '1' : '0');
@@ -63,9 +61,9 @@ function MenuItems() {
     } catch (err) { alert(err.message); }
   };
 
-  const resetForm = () => { setShowForm(false); setEditItem(null); setForm({ name: '', name_ne: '', description: '', description_ne: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null }); };
+  const resetForm = () => { setShowForm(false); setEditItem(null); setForm({ name: '', description: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null }); };
 
-  const openEdit = (item) => { setEditItem(item); setForm({ name: item.name, name_ne: item.name_ne || '', description: item.description || '', description_ne: item.description_ne || '', price: item.price, category_id: item.category_id, is_available: item.is_available, is_featured: item.is_featured, is_reward: item.is_reward || false, image: null }); setShowForm(true); };
+  const openEdit = (item) => { setEditItem(item); setForm({ name: item.name, description: item.description || '', price: item.price, category_id: item.category_id, is_available: item.is_available, is_featured: item.is_featured, is_reward: item.is_reward || false, image: null }); setShowForm(true); };
 
   return (
     <div>
@@ -83,10 +81,8 @@ function MenuItems() {
           <div className="relative bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-bold mb-4">{editItem ? 'Edit Item' : 'Add Item'}</h3>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name (English)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
-              <input type="text" value={form.name_ne} onChange={(e) => setForm({ ...form, name_ne: e.target.value })} placeholder="Name (Nepali)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" />
-              <input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (English)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" />
-              <input type="text" value={form.description_ne} onChange={(e) => setForm({ ...form, description_ne: e.target.value })} placeholder="Description (Nepali)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" />
+              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Item Name" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary h-20 resize-y" />
               <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="Price" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
               <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required>
                 <option value="">Select Category</option>

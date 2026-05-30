@@ -71,8 +71,7 @@ function Categories() {
           <div className="relative bg-white rounded-xl p-6 w-full max-w-md">
             <h3 className="text-lg font-bold mb-4">{editingId ? 'Edit Category' : 'Add Category'}</h3>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name (English)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
-              <input type="text" value={form.name_ne} onChange={(e) => setForm({ ...form, name_ne: e.target.value })} placeholder="Name (Nepali)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" />
+              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Category Name" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
               <div>
                 <label className="text-xs font-medium text-gray-600 mb-1 block">Category Image</label>
                 <div className="flex items-center gap-3">
@@ -97,7 +96,7 @@ function Categories() {
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         {loading ? <div className="p-8 text-center text-gray-400">Loading...</div> : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs text-gray-500 uppercase"><tr><th className="px-4 py-3 text-left">Image</th><th className="px-4 py-3 text-left">Name</th><th className="px-4 py-3 text-left">Nepali</th><th className="px-4 py-3 text-center">Actions</th></tr></thead>
+            <thead className="bg-gray-50 text-xs text-gray-500 uppercase"><tr><th className="px-4 py-3 text-left">Image</th><th className="px-4 py-3 text-left">Name</th><th className="px-4 py-3 text-center">Actions</th></tr></thead>
             <tbody className="divide-y divide-gray-100">
               {categories.map((cat) => (
                 <tr key={cat.id} className="hover:bg-gray-50">
@@ -105,7 +104,6 @@ function Categories() {
                     {cat.image ? <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${cat.image}`} alt="" className="w-10 h-10 rounded-lg object-cover border border-gray-100" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg" />}
                   </td>
                   <td className="px-4 py-3 font-medium">{cat.name}</td>
-                  <td className="px-4 py-3 text-gray-500">{cat.name_ne}</td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-1">
                       <button onClick={() => handleEdit(cat)} className="p-1.5 rounded hover:bg-blue-50" title="Edit">
