@@ -169,12 +169,12 @@ function OrderDetail() {
           {/* Delivery Partner + Tracking */}
           <div>
             <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Delivery Partner {!order.delivery_partner_id && <span className="text-red-400">(required)</span>}</label>
-            <div className="flex gap-2 items-start">
-              <select onChange={(e) => setOrder((prev) => ({ ...prev, _selectedPartner: e.target.value }))} value={order._selectedPartner || order.delivery_partner_id || ''} className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-1 outline-none focus:border-primary">
+            <div className="flex gap-2 items-start flex-wrap">
+              <select onChange={(e) => setOrder((prev) => ({ ...prev, _selectedPartner: e.target.value }))} value={order._selectedPartner || order.delivery_partner_id || ''} className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-44 outline-none focus:border-primary">
                 <option value="">Select partner</option>
-                {partners.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.phone})</option>)}
+                {partners.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
-              <input type="text" value={order._trackingCode ?? order.tracking_code ?? ''} onChange={(e) => setOrder((prev) => ({ ...prev, _trackingCode: e.target.value }))} placeholder="Tracking #" className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-32 outline-none focus:border-primary" />
+              <input type="text" value={order._trackingCode ?? order.tracking_code ?? ''} onChange={(e) => setOrder((prev) => ({ ...prev, _trackingCode: e.target.value }))} placeholder="Tracking #" className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-28 outline-none focus:border-primary" />
               <button
                 onClick={async () => {
                   const partnerId = order._selectedPartner || order.delivery_partner_id;
