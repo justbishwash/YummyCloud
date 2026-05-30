@@ -348,22 +348,36 @@ function Menu() {
                   <button
                     onClick={() => {
                       const cartKey = selectedItem.id + (variantLabel ? `-${variantLabel}` : '');
-                      for (let i = 0; i < popupQty; i++) {
-                        addItem({
-                          id: selectedItem.id,
-                          cartKey,
-                          name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
-                          price: variantPrice,
-                          image: selectedItem.image || null,
-                        });
+                      const cartItem = {
+                        id: selectedItem.id,
+                        cartKey,
+                        name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
+                        price: variantPrice,
+                        image: selectedItem.image || null,
+                      };
+                      // Add with specific quantity directly
+                      const items = useCartStore.getState().items;
+                      const existing = items.find((i) => (i.cartKey || String(i.id)) === cartKey);
+                      if (existing) {
+                        useCartStore.getState().updateQuantity(cartKey, existing.quantity + popupQty);
+                      } else {
+                        // Add once then set quantity
+                        addItem(cartItem);
+                        if (popupQty > 1) {
+                          useCartStore.getState().updateQuantity(cartKey, popupQty);
+                        }
                       }
                       setSelectedItem(null);
                       setSelectedVariants({});
                       setPopupQty(1);
                     }}
-                    className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
+                    disabled={hasVariants && Object.keys(selectedVariants).length < selectedItem.variants.length}
+                    className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform disabled:opacity-50 disabled:active:scale-100"
                   >
-                    + Add {popupQty > 1 ? `${popupQty} items` : 'to Cart'} • Rs. {variantPrice * popupQty}
+                    {hasVariants && Object.keys(selectedVariants).length < selectedItem.variants.length
+                      ? 'Select options above'
+                      : `+ Add ${popupQty > 1 ? `${popupQty} items` : 'to Cart'} • Rs. ${variantPrice * popupQty}`
+                    }
                   </button>
                 </div>
               </div>
