@@ -218,8 +218,9 @@ function Checkout() {
       return;
     }
 
-    // Geo-fence check
-    if (kitchenSettings.geofence_enabled === 'true' && kitchenSettings.store_lat && kitchenSettings.store_lng) {
+    // Geo-fence check (skip if all items are nationwide delivery)
+    const hasLocalItems = items.some((item) => !item.deliveryScope || item.deliveryScope === 'local');
+    if (hasLocalItems && kitchenSettings.geofence_enabled === 'true' && kitchenSettings.store_lat && kitchenSettings.store_lng) {
       const storeLat = parseFloat(kitchenSettings.store_lat);
       const storeLng = parseFloat(kitchenSettings.store_lng);
       const distance = getDistanceKm(storeLat, storeLng, customerLat, customerLng);

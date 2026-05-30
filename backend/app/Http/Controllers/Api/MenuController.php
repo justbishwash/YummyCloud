@@ -22,7 +22,7 @@ class MenuController extends Controller
     {
         $query = MenuItem::where('is_available', true)
             ->where('is_reward', false)
-            ->with('category:id,name,name_ne');
+            ->with('category:id,name,name_ne,delivery_scope');
 
         if ($request->has('category') && $request->category) {
             $query->where('category_id', $request->category);

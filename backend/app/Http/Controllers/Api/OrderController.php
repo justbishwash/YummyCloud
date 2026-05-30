@@ -129,6 +129,53 @@ class OrderController extends Controller
             ];
         }
 
+        // Geofence check: only block if cart has "local" delivery scope items
+        if ($request->customer_lat && $request->customer_lng) {
+            $geofenceEnabled = \App\Models\Setting::get('geofence_enabled', 'false') === 'true';
+            if ($geofenceEnabled) {
+                // Check if any items are local-only
+                $itemIds = collect($request->items)->pluck('id');
+                $hasLocalItems = MenuItem::whereIn('id', $itemIds)
+                    ->whereHas('category', function ($q) {
+                        $q->where('delivery_scope', 'local')->orWhereNull('delivery_scope');
+                    })->exists();
+
+                if ($hasLocalItems) {
+                    $storeLat = (float) \App\Models\Setting::get('store_lat', 0);
+                    $storeLng = (float) \App\Models\Setting::get('store_lng', 0);
+                    $custLat = (float) $request->customer_lat;
+                    $custLng = (float) $request->customer_lng;
+
+                    if ($storeLat && $storeLng) {
+                        // Calculate distance in km
+                        $earthRadius = 6371;
+                        $dLat = deg2rad($custLat - $storeLat);
+                        $dLng = deg2rad($custLng - $storeLng);
+                        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($storeLat)) * cos(deg2rad($custLat)) * sin($dLng / 2) * sin($dLng / 2);
+                        $distance = $earthRadius * 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+                        // Determine direction and max distance
+                        $direction = $custLat > $storeLat ? ($custLng > $storeLng ? 'north' : 'north') : ($custLng > $storeLng ? 'south' : 'south');
+                        if (abs($custLng - $storeLng) > abs($custLat - $storeLat)) {
+                            $direction = $custLng > $storeLng ? 'east' : 'west';
+                        }
+                        $maxDist = (float) \App\Models\Setting::get("geofence_{$direction}", 999);
+
+                        if ($distance > $maxDist) {
+                            // Get local item names for the error message
+                            $localItems = MenuItem::whereIn('id', $itemIds)
+                                ->whereHas('category', function ($q) {
+                                    $q->where('delivery_scope', 'local')->orWhereNull('delivery_scope');
+                                })->pluck('name')->implode(', ');
+                            return response()->json([
+                                'message' => "Some items ({$localItems}) are only available for local delivery. Please remove them or choose a local address.",
+                            ], 422);
+                        }
+                    }
+                }
+            }
+        }
+
         // Apply coupon (only on item subtotal)
         $discount = 0;
 

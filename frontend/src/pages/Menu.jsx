@@ -354,6 +354,7 @@ function Menu() {
                         name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
                         price: variantPrice,
                         image: selectedItem.image || null,
+                        deliveryScope: selectedItem.category?.delivery_scope || 'local',
                       };
                       // Add with specific quantity directly
                       const items = useCartStore.getState().items;

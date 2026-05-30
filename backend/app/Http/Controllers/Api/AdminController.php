@@ -319,7 +319,7 @@ class AdminController extends Controller
     public function createCategory(Request $request)
     {
         $request->validate(['name' => 'required|string', 'image' => 'nullable|image|max:5120']);
-        $data = $request->only('name', 'name_ne', 'icon');
+        $data = $request->only('name', 'name_ne', 'icon', 'delivery_scope');
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('categories', 'public');
         }
@@ -330,7 +330,7 @@ class AdminController extends Controller
     {
         $cat = Category::findOrFail($id);
         $request->validate(['image' => 'nullable|image|max:5120']);
-        $data = $request->only('name', 'name_ne', 'icon', 'is_active');
+        $data = $request->only('name', 'name_ne', 'icon', 'is_active', 'delivery_scope');
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('categories', 'public');
         }

@@ -5,7 +5,7 @@ import api from '../services/api';
 function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ name: '', name_ne: '', image: null, imagePreview: '' });
+  const [form, setForm] = useState({ name: '', name_ne: '', image: null, imagePreview: '', delivery_scope: 'local' });
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -23,6 +23,7 @@ function Categories() {
       formData.append('name', form.name);
       if (form.name_ne) formData.append('name_ne', form.name_ne);
       if (form.image) formData.append('image', form.image);
+      formData.append('delivery_scope', form.delivery_scope || 'local');
 
       if (editingId) {
         const res = await api.upload(`/admin/categories/${editingId}`, formData);
@@ -41,13 +42,13 @@ function Categories() {
   };
 
   const handleEdit = (cat) => {
-    setForm({ name: cat.name || '', name_ne: cat.name_ne || '', image: null, imagePreview: cat.image || '' });
+    setForm({ name: cat.name || '', name_ne: cat.name_ne || '', image: null, imagePreview: cat.image || '', delivery_scope: cat.delivery_scope || 'local' });
     setEditingId(cat.id);
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setForm({ name: '', name_ne: '', image: null, imagePreview: '' });
+    setForm({ name: '', name_ne: '', image: null, imagePreview: '', delivery_scope: 'local' });
     setEditingId(null);
     setShowForm(false);
   };
@@ -72,6 +73,13 @@ function Categories() {
             <h3 className="text-lg font-bold mb-4">{editingId ? 'Edit Category' : 'Add Category'}</h3>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Category Name" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Delivery Scope</label>
+                <select value={form.delivery_scope || 'local'} onChange={(e) => setForm({ ...form, delivery_scope: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary">
+                  <option value="local">Local Only (within delivery zone)</option>
+                  <option value="nationwide">Nationwide (ship anywhere)</option>
+                </select>
+              </div>
               <div>
                 <label className="text-xs font-medium text-gray-600 mb-1 block">Category Image</label>
                 <div className="flex items-center gap-3">
