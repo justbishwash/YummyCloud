@@ -199,8 +199,14 @@ function Home() {
                 to={`/menu?category=${cat.id}`}
                 className="flex flex-col items-center gap-2 shrink-0 w-[72px] active:scale-95 transition-transform"
               >
-                <div className="w-[60px] h-[60px] bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center">
-                  <span className="text-2xl">{cat.icon}</span>
+                <div className="w-[60px] h-[60px] rounded-2xl shadow-sm border border-gray-100 overflow-hidden bg-gray-50">
+                  {cat.image ? (
+                    <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${cat.image}`} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                      <span className="text-2xl">{cat.icon || '🍽️'}</span>
+                    </div>
+                  )}
                 </div>
                 <span className="text-[11px] font-medium text-gray-600 text-center leading-tight line-clamp-2">
                   {isNepali ? cat.name_ne || cat.name : cat.name}
