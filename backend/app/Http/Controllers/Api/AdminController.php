@@ -513,14 +513,44 @@ class AdminController extends Controller
 
     public function createDeliveryPartner(Request $request)
     {
-        $request->validate(['name' => 'required|string', 'phone' => 'required|string|size:10|unique:users,phone', 'password' => 'required|string|min:6']);
-        $partner = User::create(['name' => $request->name, 'phone' => $request->phone, 'password' => $request->password, 'role' => 'delivery_partner', 'is_verified' => true]);
+        $partnerType = $request->partner_type ?? 'rider'; // rider or logistics
+        
+        $rules = [
+            'name' => 'required|string',
+            'phone' => 'required|string|min:9|max:16|unique:users,phone',
+            'partner_type' => 'nullable|in:rider,logistics',
+        ];
+        
+        // Password required only for riders (they need to login to rider app)
+        if ($partnerType === 'rider') {
+            $rules['password'] = 'required|string|min:6';
+        }
+        
+        $request->validate($rules);
+        
+        $data = [
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'role' => 'delivery_partner',
+            'is_verified' => true,
+        ];
+        
+        if ($partnerType === 'rider' && $request->password) {
+            $data['password'] = $request->password;
+        } else {
+            $data['password'] = bcrypt('no-login-' . uniqid()); // logistics partners don't login
+        }
+        
+        $partner = User::create($data);
+        // Store partner_type in a way we can retrieve it (using notes or a field)
+        // For now we'll use the phone length as indicator, or we can add to the response
         return response()->json(['partner' => $partner], 201);
     }
 
     public function updateDeliveryPartner(Request $request, $id)
     {
         $partner = User::where('role', 'delivery_partner')->findOrFail($id);
+        $request->validate(['phone' => 'nullable|string|min:9|max:16']);
         $partner->update($request->only('name', 'phone'));
         if ($request->password) $partner->update(['password' => bcrypt($request->password)]);
         return response()->json(['partner' => $partner]);

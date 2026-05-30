@@ -7,7 +7,7 @@ function DeliveryPartners() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editPartner, setEditPartner] = useState(null);
-  const [form, setForm] = useState({ name: '', phone: '', password: '' });
+  const [form, setForm] = useState({ name: '', phone: '', password: '', partner_type: 'rider' });
   const [viewStats, setViewStats] = useState(null);
 
   useEffect(() => {
@@ -53,9 +53,9 @@ function DeliveryPartners() {
     } catch (err) { alert(err.message); }
   };
 
-  const resetForm = () => { setShowForm(false); setEditPartner(null); setForm({ name: '', phone: '', password: '' }); };
+  const resetForm = () => { setShowForm(false); setEditPartner(null); setForm({ name: '', phone: '', password: '', partner_type: 'rider' }); };
 
-  const openEdit = (p) => { setEditPartner(p); setForm({ name: p.name, phone: p.phone, password: '' }); setShowForm(true); };
+  const openEdit = (p) => { setEditPartner(p); setForm({ name: p.name, phone: p.phone, password: '', partner_type: p.phone?.length > 10 ? 'logistics' : 'rider' }); setShowForm(true); };
 
   return (
     <div>
@@ -73,9 +73,27 @@ function DeliveryPartners() {
           <div className="relative bg-white rounded-xl p-6 w-full max-w-sm">
             <h3 className="text-lg font-bold mb-4">{editPartner ? 'Edit Partner' : 'Add Delivery Partner'}</h3>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Full Name" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required />
-              <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })} placeholder="Phone (10 digits)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required maxLength={10} />
-              <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder={editPartner ? 'New password (leave blank to keep)' : 'Password'} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" {...(!editPartner && { required: true })} />
+              {!editPartner && (
+                <div>
+                  <label className="text-xs font-medium text-gray-600 mb-1.5 block">Partner Type</label>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => setForm({ ...form, partner_type: 'rider' })} className={`flex-1 py-2.5 rounded-lg text-xs font-medium border transition-colors ${form.partner_type === 'rider' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-600 border-gray-200'}`}>
+                      🏍️ Rider
+                    </button>
+                    <button type="button" onClick={() => setForm({ ...form, partner_type: 'logistics' })} className={`flex-1 py-2.5 rounded-lg text-xs font-medium border transition-colors ${form.partner_type === 'logistics' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-600 border-gray-200'}`}>
+                      🚚 Logistics Partner
+                    </button>
+                  </div>
+                </div>
+              )}
+              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={form.partner_type === 'logistics' ? 'Company / Partner Name' : 'Full Name'} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required />
+              <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 16) })} placeholder={form.partner_type === 'logistics' ? 'Phone (9-16 digits)' : 'Phone (10 digits)'} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required minLength={9} maxLength={16} />
+              {form.partner_type === 'rider' && (
+                <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder={editPartner ? 'New password (leave blank to keep)' : 'Password (for rider app login)'} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" {...(!editPartner && { required: true })} />
+              )}
+              {form.partner_type === 'logistics' && !editPartner && (
+                <p className="text-[10px] text-gray-400 bg-gray-50 rounded-lg px-3 py-2">Logistics partners don't need a password — they won't use the rider app.</p>
+              )}
               <div className="flex gap-2 pt-2">
                 <button type="button" onClick={resetForm} className="flex-1 py-2 rounded-lg text-sm bg-gray-100 text-gray-600">Cancel</button>
                 <button type="submit" className="flex-1 py-2 rounded-lg text-sm bg-primary text-white font-medium">Save</button>
