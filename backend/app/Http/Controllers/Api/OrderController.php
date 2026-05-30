@@ -38,6 +38,8 @@ class OrderController extends Controller
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|exists:menu_items,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.variant_price' => 'nullable|numeric|min:0',
+            'items.*.variant_label' => 'nullable|string|max:255',
             'address' => 'required|string',
             'customer_lat' => 'nullable|numeric',
             'customer_lng' => 'nullable|numeric',
@@ -67,6 +69,24 @@ class OrderController extends Controller
             }
 
             $itemPrice = $menuItem->price;
+
+            // Use variant price if provided and valid
+            $itemName = $menuItem->name;
+            if (!empty($item['variant_price']) && $menuItem->variants) {
+                // Validate the variant price exists in the item's variants
+                $validPrices = [];
+                foreach ($menuItem->variants as $group) {
+                    foreach ($group['options'] ?? [] as $opt) {
+                        $validPrices[] = (float) $opt['price'];
+                    }
+                }
+                if (in_array((float) $item['variant_price'], $validPrices)) {
+                    $itemPrice = (float) $item['variant_price'];
+                }
+                if (!empty($item['variant_label'])) {
+                    $itemName = $menuItem->name . ' (' . $item['variant_label'] . ')';
+                }
+            }
 
             // Handle reward item (free, qty 1)
             if ($menuItem->is_reward && !$hasRewardItem) {
@@ -102,7 +122,7 @@ class OrderController extends Controller
             $subtotal += $itemTotal;
             $orderItems[] = [
                 'menu_item_id' => $menuItem->id,
-                'name' => $menuItem->name,
+                'name' => $itemName,
                 'price' => $itemPrice,
                 'quantity' => $item['quantity'],
                 'total' => $itemTotal,

@@ -236,7 +236,7 @@ function Checkout() {
 
     try {
       const orderData = {
-        items: items.map((item) => ({ id: item.id, quantity: item.quantity })),
+        items: items.map((item) => ({ id: item.id, quantity: item.quantity, variant_price: item.price, variant_label: item.name.includes('(') ? item.name.split('(')[1]?.replace(')', '') : null })),
         address: `${selectedAddress.label}: ${selectedAddress.address}${selectedAddress.detail ? ', ' + selectedAddress.detail : ''}`,
         customer_lat: customerLat,
         customer_lng: customerLng,
@@ -497,7 +497,7 @@ function Checkout() {
           <h3 className="font-semibold text-gray-800 text-sm mb-3">Order Summary</h3>
           <div className="space-y-1.5 text-sm text-gray-600">
             {items.map((item) => (
-              <div key={item.id} className="flex justify-between">
+              <div key={item.cartKey || item.id} className="flex justify-between">
                 <span>{item.name} × {item.quantity}</span>
                 <span>Rs. {item.price * item.quantity}</span>
               </div>
