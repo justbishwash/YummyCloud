@@ -243,7 +243,7 @@ function Menu() {
         return (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
             <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedItem(null)} />
-            <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[85vh] overflow-y-auto">
+            <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[70vh] overflow-y-auto">
               {/* Image Slider */}
               {allImages.length > 0 && (
                 <div className="relative">
