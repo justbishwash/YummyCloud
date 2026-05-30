@@ -20,11 +20,11 @@ function Sales() {
     fetchReport();
   }, []);
 
-  const fetchReport = (sessionMode = false) => {
+  const fetchReport = (periodOverride = null) => {
     setLoading(true);
     let params = '?';
-    if (sessionMode) {
-      params += 'session=current&';
+    if (periodOverride) {
+      params += `period=${periodOverride}&`;
     } else {
       if (dateFrom) params += `from=${dateFrom}&`;
       if (dateTo) params += `to=${dateTo}&`;
@@ -41,11 +41,11 @@ function Sales() {
     fetchReport();
   };
 
-  const handleCurrentSession = () => {
+  const handleQuickFilter = (period) => {
     setDateFrom('');
     setDateTo('');
     setPage(1);
-    fetchReport(true);
+    fetchReport(period);
   };
 
   const [orderSearch, setOrderSearch] = useState('');
@@ -107,7 +107,9 @@ function Sales() {
         />
 
         <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">Apply</button>
-        <button type="button" onClick={handleCurrentSession} className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium">Current Session</button>
+        <button type="button" onClick={() => handleQuickFilter('today')} className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium">Today</button>
+        <button type="button" onClick={() => handleQuickFilter('yesterday')} className="bg-gray-600 text-white px-3 py-2 rounded-lg text-sm font-medium">Yesterday</button>
+        <button type="button" onClick={() => handleQuickFilter('week')} className="bg-gray-500 text-white px-3 py-2 rounded-lg text-sm font-medium">This Week</button>
         {(dateFrom || dateTo || selectedCustomer) && (
           <button type="button" onClick={() => { setDateFrom(''); setDateTo(''); setSelectedCustomer(null); setTimeout(fetchReport, 0); }} className="text-sm text-primary font-medium">Clear</button>
         )}

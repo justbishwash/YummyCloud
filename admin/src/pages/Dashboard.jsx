@@ -6,7 +6,7 @@ import api from '../services/api';
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState('current');
+  const [period, setPeriod] = useState('today');
 
   useEffect(() => {
     setLoading(true);
@@ -27,8 +27,8 @@ function Dashboard() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
         <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5">
-          {[{ key: 'current', label: 'Current Shift' }, { key: 'previous', label: 'Previous Shift' }].map((p) => (
-            <button key={p.key} onClick={() => setPeriod(p.key)} className={`px-3 py-1.5 rounded-md text-xs font-medium ${period === p.key ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'}`}>
+          {[{ key: 'today', label: 'Today' }, { key: 'yesterday', label: 'Yesterday' }, { key: 'week', label: 'This Week' }, { key: 'month', label: 'This Month' }].map((p) => (
+            <button key={p.key} onClick={() => setPeriod(p.key)} className={`px-2.5 py-1.5 rounded-md text-[11px] font-medium ${period === p.key ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'}`}>
               {p.label}
             </button>
           ))}

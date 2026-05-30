@@ -17,28 +17,25 @@ class AdminController extends Controller
     // Dashboard
     public function dashboard(Request $request)
     {
-        $period = $request->period ?? 'current';
+        $period = $request->period ?? 'today';
         $query = Order::where('status', '!=', 'cancelled');
 
-        if ($period === 'current') {
-            $range = $this->getCurrentSessionRange();
-            $query->where('created_at', '>=', $range['start'])->where('created_at', '<=', $range['end']);
-        } elseif ($period === 'previous') {
-            $range = $this->getPreviousSessionRange();
-            $query->where('created_at', '>=', $range['start'])->where('created_at', '<=', $range['end']);
+        if ($period === 'today') {
+            $query->whereDate('created_at', today());
+        } elseif ($period === 'yesterday') {
+            $query->whereDate('created_at', today()->subDay());
+        } elseif ($period === 'week') {
+            $query->where('created_at', '>=', now()->startOfWeek());
+        } elseif ($period === 'month') {
+            $query->where('created_at', '>=', now()->startOfMonth());
         }
-
-        $range = $period === 'previous' ? $this->getPreviousSessionRange() : $this->getCurrentSessionRange();
 
         return response()->json([
             'total_orders' => $query->count(),
             'total_revenue' => $query->sum('total'),
             'total_customers' => User::where('role', 'customer')->count(),
             'pending_orders' => Order::whereIn('status', ['pending', 'confirmed', 'preparing'])->count(),
-            'period_orders' => $query->count(),
             'recent_orders' => Order::with('user:id,name,phone')->latest()->take(5)->get(),
-            'session_start' => $range['start']->format('M d, h:i A'),
-            'session_end' => $range['end']->format('M d, h:i A'),
         ]);
     }
 
@@ -105,9 +102,18 @@ class AdminController extends Controller
     public function salesReport(Request $request)
     {
         $query = Order::with('user:id,name')->where('status', '!=', 'cancelled');
-        if ($request->session === 'current') {
-            $range = $this->getCurrentSessionRange();
-            $query->where('created_at', '>=', $range['start'])->where('created_at', '<=', $range['end']);
+        
+        // Date-based filtering
+        if ($request->period) {
+            if ($request->period === 'today') {
+                $query->whereDate('created_at', today());
+            } elseif ($request->period === 'yesterday') {
+                $query->whereDate('created_at', today()->subDay());
+            } elseif ($request->period === 'week') {
+                $query->where('created_at', '>=', now()->startOfWeek());
+            } elseif ($request->period === 'month') {
+                $query->where('created_at', '>=', now()->startOfMonth());
+            }
         } else {
             if ($request->from) $query->whereDate('created_at', '>=', $request->from);
             if ($request->to) $query->whereDate('created_at', '<=', $request->to);
