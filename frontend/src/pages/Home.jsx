@@ -200,7 +200,7 @@ function Home() {
                 <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
                   <HiOutlineBolt className="w-4 h-4 text-white" />
                 </div>
-                <p className="text-[11px] font-medium text-white/90">39 Min Delivery</p>
+                <p className="text-[11px] font-medium text-white/90">45 Min Delivery</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">

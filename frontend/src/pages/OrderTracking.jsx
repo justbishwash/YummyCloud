@@ -183,7 +183,9 @@ function OrderTracking() {
             ) : (
               <>
                 <p className="text-sm opacity-80">Estimated Delivery</p>
-                <h2 className="text-2xl font-bold mt-1">25-30 min</h2>
+                <h2 className="text-2xl font-bold mt-1">
+                  {order.delivery_fee > 100 ? '1-3 Days' : '25-45 min'}
+                </h2>
               </>
             )}
             <p className="text-xs opacity-70 mt-2">Placed at {placedAt}</p>
