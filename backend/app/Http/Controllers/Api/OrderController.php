@@ -196,34 +196,51 @@ class OrderController extends Controller
             }
         }
 
-        // Delivery fee - check city fee first, then distance presets, then default
+        // Delivery fee logic:
+        // 1. If user is within geofence → use km-based preset fee
+        // 2. If user is outside geofence → use city-based fee
+        // 3. Fallback → default delivery fee from settings
         $deliveryFee = (float) \App\Models\Setting::get('delivery_fee', 0);
-        
-        // If city_id is provided, use city's delivery fee
-        if ($request->city_id) {
-            $city = \App\Models\City::find($request->city_id);
-            if ($city && $city->delivery_fee > 0) {
-                $deliveryFee = (float) $city->delivery_fee;
-            }
-        } else {
-            // Fall back to distance-based presets
-            $storeLat = \App\Models\Setting::get('store_lat');
-            $storeLng = \App\Models\Setting::get('store_lng');
-            $presets = json_decode(\App\Models\Setting::get('delivery_charge_presets', '[]'), true);
+        $isInsideGeofence = false;
 
-            if ($storeLat && $storeLng && $request->customer_lat && $request->customer_lng && !empty($presets)) {
-                $distance = $this->getDistanceKm(
-                    (float) $storeLat, (float) $storeLng,
-                    (float) $request->customer_lat, (float) $request->customer_lng
-                );
-                foreach ($presets as $preset) {
-                    if ($distance >= (float) $preset['from'] && $distance <= (float) $preset['to']) {
-                        $deliveryFee = (float) $preset['fee'];
-                        break;
+        $storeLat = (float) \App\Models\Setting::get('store_lat', 0);
+        $storeLng = (float) \App\Models\Setting::get('store_lng', 0);
+        $geofenceEnabled = \App\Models\Setting::get('geofence_enabled', 'false') === 'true';
+
+        if ($geofenceEnabled && $storeLat && $storeLng && $request->customer_lat && $request->customer_lng) {
+            $distance = $this->getDistanceKm($storeLat, $storeLng, (float) $request->customer_lat, (float) $request->customer_lng);
+            
+            // Determine direction and max distance for geofence check
+            $custLat = (float) $request->customer_lat;
+            $custLng = (float) $request->customer_lng;
+            $direction = abs($custLat - $storeLat) > abs($custLng - $storeLng)
+                ? ($custLat > $storeLat ? 'north' : 'south')
+                : ($custLng > $storeLng ? 'east' : 'west');
+            $maxDist = (float) \App\Models\Setting::get("geofence_{$direction}", 999);
+
+            if ($distance <= $maxDist) {
+                // Inside geofence → use km-based presets
+                $isInsideGeofence = true;
+                $presets = json_decode(\App\Models\Setting::get('delivery_charge_presets', '[]'), true);
+                if (!empty($presets)) {
+                    foreach ($presets as $preset) {
+                        if ($distance >= (float) $preset['from'] && $distance <= (float) $preset['to']) {
+                            $deliveryFee = (float) $preset['fee'];
+                            break;
+                        }
                     }
                 }
             }
         }
+
+        // If outside geofence (or no GPS), use city-based fee
+        if (!$isInsideGeofence && $request->city_id) {
+            $city = \App\Models\City::find($request->city_id);
+            if ($city) {
+                $deliveryFee = (float) $city->delivery_fee;
+            }
+        }
+
         $feeMandatory = \App\Models\Setting::get('delivery_fee_mandatory', 'true') === 'true';
 
         // Wallet deduction

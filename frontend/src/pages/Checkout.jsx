@@ -94,26 +94,42 @@ function Checkout() {
     }).catch(console.error);
   }, []);
 
-  // Recalculate delivery fee based on user location
+  // Recalculate delivery fee: inside geofence → km fee, outside → city fee
   useEffect(() => {
-    if (!kitchenSettings.store_lat || !kitchenSettings.delivery_charge_presets) return;
-    if (!selectedAddress?.latitude) return;
+    if (!selectedAddress) return;
+    const defaultFee = Number(kitchenSettings.delivery_fee) || 0;
 
-    const storeLat = parseFloat(kitchenSettings.store_lat);
-    const storeLng = parseFloat(kitchenSettings.store_lng);
-    const dist = getDistanceKm(storeLat, storeLng, selectedAddress.latitude, selectedAddress.longitude);
+    // Check if inside geofence
+    if (kitchenSettings.geofence_enabled === 'true' && kitchenSettings.store_lat && selectedAddress.latitude) {
+      const storeLat = parseFloat(kitchenSettings.store_lat);
+      const storeLng = parseFloat(kitchenSettings.store_lng);
+      const dist = getDistanceKm(storeLat, storeLng, selectedAddress.latitude, selectedAddress.longitude);
+      const direction = getDirection(storeLat, storeLng, selectedAddress.latitude, selectedAddress.longitude);
+      const maxDist = parseFloat(kitchenSettings[`geofence_${direction.toLowerCase()}`] || 999);
 
-    let presets = [];
-    try { presets = JSON.parse(kitchenSettings.delivery_charge_presets || '[]'); } catch {}
-
-    if (presets.length > 0) {
-      const match = presets.find(p => dist >= parseFloat(p.from) && dist <= parseFloat(p.to));
-      if (match) {
-        setDeliveryFee(Number(match.fee));
+      if (dist <= maxDist) {
+        // Inside geofence → use km-based presets
+        let presets = [];
+        try { presets = JSON.parse(kitchenSettings.delivery_charge_presets || '[]'); } catch {}
+        if (presets.length > 0) {
+          const match = presets.find(p => dist >= parseFloat(p.from) && dist <= parseFloat(p.to));
+          if (match) {
+            setDeliveryFee(Number(match.fee));
+            return;
+          }
+        }
+        setDeliveryFee(defaultFee);
         return;
       }
     }
-    setDeliveryFee(Number(kitchenSettings.delivery_fee) || 0);
+
+    // Outside geofence → use city-based fee
+    if (selectedAddress.city_id && selectedAddress.city) {
+      setDeliveryFee(Number(selectedAddress.city.delivery_fee) || 0);
+      return;
+    }
+
+    setDeliveryFee(defaultFee);
   }, [kitchenSettings, selectedAddress]);
 
   useEffect(() => {
