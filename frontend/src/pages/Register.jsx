@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiOutlineChevronLeft, HiOutlineEye, HiOutlineEyeSlash, HiOutlineShieldCheck } from 'react-icons/hi2';
 import useAuthStore from '../store/useAuthStore';
@@ -7,7 +6,6 @@ import api from '../services/api';
 import { setOneSignalExternalUserId } from '../utils/onesignal';
 
 function Register() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
 
@@ -117,7 +115,7 @@ function Register() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">{t('phone')}</label>
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">Phone Number</label>
                 <div className="flex items-center border-2 border-gray-100 rounded-2xl px-4 py-3.5 focus-within:border-primary transition-colors bg-gray-50/50">
                   <div className="flex items-center gap-2 pr-3 border-r border-gray-200">
                     <span className="text-lg">🇳🇵</span>
@@ -219,7 +217,7 @@ function Register() {
                     Verifying...
                   </span>
                 ) : (
-                  t('verify')
+                  "Verify"
                 )}
               </button>
             </form>
@@ -228,7 +226,7 @@ function Register() {
           {step === 1 && (
             <p className="text-center text-sm text-gray-500 mt-5">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary font-semibold">{t('login')}</Link>
+              <Link to="/login" className="text-primary font-semibold">Login</Link>
             </p>
           )}
         </div>

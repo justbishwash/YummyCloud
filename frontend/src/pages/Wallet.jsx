@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   HiOutlineWallet,
@@ -12,7 +11,6 @@ import useAuthStore from '../store/useAuthStore';
 import api from '../services/api';
 
 function Wallet() {
-  const { t } = useTranslation();
   const { isAuthenticated } = useAuthStore();
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
@@ -43,14 +41,14 @@ function Wallet() {
   if (!isAuthenticated) {
     return (
       <>
-        <TopNav title={t('wallet')} showBack={true} />
+        <TopNav title="Wallet" showBack={true} />
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
           <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             <HiOutlineWallet className="w-10 h-10 text-gray-300" />
           </div>
           <p className="text-sm text-gray-500 mb-4">Login to view your wallet</p>
           <Link to="/login" className="bg-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
-            {t('login')}
+            Login
           </Link>
         </div>
       </>
@@ -59,7 +57,7 @@ function Wallet() {
 
   return (
     <div className="pb-4">
-      <TopNav title={t('wallet')} showBack={true} />
+      <TopNav title="Wallet" showBack={true} />
 
       {/* Balance Card */}
       <div className="px-4 pt-4">

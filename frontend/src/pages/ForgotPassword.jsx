@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiOutlineChevronLeft, HiOutlineShieldCheck } from 'react-icons/hi2';
 import api from '../services/api';
 
 function ForgotPassword() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState('');
@@ -78,7 +76,7 @@ function ForgotPassword() {
         {step === 1 && (
           <form onSubmit={handleSendOtp} className="space-y-5">
             <div>
-              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">{t('phone')}</label>
+              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">Phone Number</label>
               <div className="flex items-center border-2 border-gray-100 rounded-2xl px-4 py-3.5 focus-within:border-primary transition-colors bg-gray-50/50">
                 <div className="flex items-center gap-2 pr-3 border-r border-gray-200">
                   <span className="text-lg">🇳🇵</span>
@@ -157,7 +155,7 @@ function ForgotPassword() {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Remember your password?{' '}
-          <Link to="/login" className="text-primary font-semibold">{t('login')}</Link>
+          <Link to="/login" className="text-primary font-semibold">Login</Link>
         </p>
       </div>
     </div>

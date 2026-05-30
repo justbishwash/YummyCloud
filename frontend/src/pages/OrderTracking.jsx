@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import {
   HiOutlineCheckCircle,
@@ -24,7 +23,6 @@ const steps = [
 ];
 
 function OrderTracking() {
-  const { t } = useTranslation();
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -420,7 +418,7 @@ function OrderTracking() {
             </div>
           </div>
           <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between font-bold text-gray-800 text-sm">
-            <span>{t('total')}</span>
+            <span>Total</span>
             <span>Rs. {Number(order.total)}</span>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   HiOutlineChatBubbleLeftEllipsis,
@@ -23,7 +22,6 @@ const typeIcons = {
 };
 
 function Messages() {
-  const { t } = useTranslation();
   const { isAuthenticated } = useAuthStore();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +85,7 @@ function Messages() {
           </div>
           <p className="text-sm text-gray-500 mb-4">Login to view messages</p>
           <Link to="/login" className="bg-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
-            {t('login')}
+            Login
           </Link>
         </div>
       </>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   HiOutlineMapPin,
@@ -16,7 +15,6 @@ import useAddressStore from '../store/useAddressStore';
 import api from '../services/api';
 
 function Addresses() {
-  const { t } = useTranslation();
   const { isAuthenticated } = useAuthStore();
   const { addresses, setAddresses } = useAddressStore();
   const [showForm, setShowForm] = useState(false);
@@ -120,14 +118,14 @@ function Addresses() {
   if (!isAuthenticated) {
     return (
       <>
-        <TopNav title={t('saved_addresses')} showBack={true} />
+        <TopNav title="Saved Addresses" showBack={true} />
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
           <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             <HiOutlineMapPin className="w-10 h-10 text-gray-300" />
           </div>
           <p className="text-sm text-gray-500 mb-4">Login to manage addresses</p>
           <Link to="/login" className="bg-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
-            {t('login')}
+            Login
           </Link>
         </div>
       </>
@@ -137,7 +135,7 @@ function Addresses() {
   return (
     <div className="pb-4">
       <TopNav
-        title={t('saved_addresses')}
+        title="Saved Addresses"
         showBack={true}
         rightAction={
           <button

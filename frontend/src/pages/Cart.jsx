@@ -1,31 +1,36 @@
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HiOutlineTrash, HiMinus, HiPlus, HiOutlineShoppingCart } from 'react-icons/hi2';
+import { HiOutlineTrash, HiMinus, HiPlus, HiOutlineShoppingCart, HiOutlineXMark, HiOutlineSparkles } from 'react-icons/hi2';
 import TopNav from '../components/TopNav';
 import useCartStore from '../store/useCartStore';
+import useAuthStore from '../store/useAuthStore';
+import useAppStore from '../store/useAppStore';
 
 function Cart() {
-  const { t, i18n } = useTranslation();
-  const isNepali = i18n.language === 'ne';
   const { items, updateQuantity, clearCart, getTotal, getItemCount } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
+  const settings = useAppStore((s) => s.settings);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const total = getTotal();
   const itemCount = getItemCount();
+
+  const welcomeBonus = settings?.welcome_bonus || null;
 
   if (items.length === 0) {
     return (
       <>
-        <TopNav title={t('cart')} showBack={true} />
+        <TopNav title="Cart" showBack={true} />
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
           <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-5">
             <HiOutlineShoppingCart className="w-12 h-12 text-gray-300" />
           </div>
-          <h2 className="text-lg font-bold text-gray-800 mb-1">{t('no_items')}</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-1">No items in cart</h2>
           <p className="text-sm text-gray-500 mb-6 text-center">Add items from the menu to get started</p>
           <Link
             to="/menu"
             className="bg-primary text-white px-8 py-3 rounded-2xl font-semibold text-sm active:scale-95 transition-transform shadow-lg shadow-primary/25"
           >
-            {t('explore_menu')}
+            Explore Menu
           </Link>
         </div>
       </>
@@ -35,7 +40,7 @@ function Cart() {
   return (
     <div className="pb-28">
       <TopNav
-        title={`${t('cart')} (${itemCount})`}
+        title={`Cart (${itemCount})`}
         showBack={true}
         rightAction={
           <button
@@ -63,7 +68,7 @@ function Cart() {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-medium text-gray-800 text-sm truncate">
-                {isNepali ? item.nameNe : item.name}
+                {item.name}
               </h3>
               <p className="text-sm font-bold text-gray-900 mt-1">
                 Rs. {item.price * item.quantity}
@@ -115,15 +120,70 @@ function Cart() {
       {/* Checkout Button - Fixed Bottom */}
       <div className="fixed bottom-20 left-0 right-0 px-4 py-3 bg-white/95 backdrop-blur-md border-t border-gray-100">
         <div className="max-w-lg mx-auto">
-          <Link
-            to="/checkout"
-            className="flex items-center justify-between w-full bg-primary text-white px-6 py-3.5 rounded-2xl font-semibold text-sm active:scale-[0.98] transition-transform shadow-lg shadow-primary/25"
-          >
-            <span>{t('checkout')}</span>
-            <span className="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold">Rs. {total}</span>
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/checkout"
+              className="flex items-center justify-between w-full bg-primary text-white px-6 py-3.5 rounded-2xl font-semibold text-sm active:scale-[0.98] transition-transform shadow-lg shadow-primary/25"
+            >
+              <span>Checkout</span>
+              <span className="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold">Rs. {total}</span>
+            </Link>
+          ) : (
+            <button
+              onClick={() => setShowLoginPrompt(true)}
+              className="flex items-center justify-between w-full bg-primary text-white px-6 py-3.5 rounded-2xl font-semibold text-sm active:scale-[0.98] transition-transform shadow-lg shadow-primary/25"
+            >
+              <span>Checkout</span>
+              <span className="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold">Rs. {total}</span>
+            </button>
+          )}
         </div>
       </div>
+
+      {/* Login Prompt Popup */}
+      {showLoginPrompt && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center px-5">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowLoginPrompt(false)} />
+          <div className="relative bg-white rounded-2xl p-6 w-full max-w-sm animate-slide-up text-center">
+            {/* Close button */}
+            <button
+              onClick={() => setShowLoginPrompt(false)}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
+            >
+              <HiOutlineXMark className="w-4 h-4 text-gray-600" />
+            </button>
+
+            {/* Icon */}
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <HiOutlineSparkles className="w-8 h-8 text-primary" />
+            </div>
+
+            {/* Text */}
+            <h3 className="text-lg font-bold text-gray-800">
+              Sign up & get welcome bonus!
+            </h3>
+            {welcomeBonus && (
+              <p className="text-sm text-gray-500 mt-1">
+                Get Rs. {welcomeBonus} in your wallet on signup
+              </p>
+            )}
+
+            {/* Create Account Button */}
+            <Link
+              to="/register"
+              className="block w-full bg-primary text-white py-3.5 rounded-2xl font-semibold text-sm mt-5 active:scale-[0.98] transition-transform shadow-lg shadow-primary/25"
+            >
+              Create Account
+            </Link>
+
+            {/* Login Link */}
+            <p className="text-sm text-gray-500 mt-4">
+              Already have an account?{' '}
+              <Link to="/login" className="text-primary font-semibold">Login</Link>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

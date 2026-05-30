@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiOutlineChevronLeft, HiOutlineEye, HiOutlineEyeSlash } from 'react-icons/hi2';
 import useAuthStore from '../store/useAuthStore';
@@ -8,7 +7,6 @@ import api from '../services/api';
 import { setOneSignalExternalUserId } from '../utils/onesignal';
 
 function Login() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const [phone, setPhone] = useState('');
@@ -83,10 +81,10 @@ function Login() {
           {storeLogo ? (
             <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${storeLogo}`} alt="" className="w-full h-full object-cover rounded-full" />
           ) : (
-            <span className="text-3xl font-bold text-primary">{(storeName || t('app_name')).charAt(0)}</span>
+            <span className="text-3xl font-bold text-primary">{(storeName || 'CloudKitchen').charAt(0)}</span>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-white">{storeName || t('app_name')}</h1>
+        <h1 className="text-2xl font-bold text-white">{storeName || 'CloudKitchen'}</h1>
         <p className="text-sm text-white/80 mt-1">Delicious food, delivered fast</p>
       </div>
 
@@ -94,7 +92,7 @@ function Login() {
       <div className="relative z-10 mx-4 -mt-4">
         <div className="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-gray-800">{t('login')}</h2>
+            <h2 className="text-xl font-bold text-gray-800">Login</h2>
             <p className="text-sm text-gray-500 mt-1">Sign in with your phone number</p>
           </div>
 
@@ -107,7 +105,7 @@ function Login() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">
-                {t('phone')}
+                Phone Number
               </label>
               <div className="flex items-center border-2 border-gray-100 rounded-2xl px-4 py-3.5 focus-within:border-primary transition-colors bg-gray-50/50">
                 <div className="flex items-center gap-2 pr-3 border-r border-gray-200">
@@ -164,14 +162,14 @@ function Login() {
                   Signing in...
                 </span>
               ) : (
-                t('login')
+                "Login"
               )}
             </button>
           </form>
 
           <p className="text-center text-sm text-gray-500 mt-5">
             Don't have an account?{' '}
-            <Link to="/register" className="text-primary font-semibold">{t('signup')}</Link>
+            <Link to="/register" className="text-primary font-semibold">Sign Up</Link>
           </p>
         </div>
       </div>

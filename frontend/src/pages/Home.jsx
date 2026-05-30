@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
-  HiOutlineEnvelope,
   HiOutlineMagnifyingGlass,
   HiOutlineMoon,
   HiOutlineBell,
@@ -13,8 +11,6 @@ import useAppStore from '../store/useAppStore';
 import api from '../services/api';
 
 function Home() {
-  const { t, i18n } = useTranslation();
-  const isNepali = i18n.language === 'ne';
   const addItem = useCartStore((state) => state.addItem);
   const { user } = useAuthStore();
   const appName = useAppStore((s) => s.appName);
@@ -37,7 +33,7 @@ function Home() {
   const [storeOpenTime, setStoreOpenTime] = useState('');
   const [notice, setNotice] = useState(null);
 
-  useEffect(() => { document.title = `${appName || t('app_name')} - Order Food Online`; }, [appName]);
+  useEffect(() => { document.title = `${appName || 'CloudKitchen'} - Order Food Online`; }, [appName]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,7 +83,6 @@ function Home() {
     addItem({
       id: dish.id,
       name: dish.name,
-      nameNe: dish.name_ne,
       price: Number(dish.price),
       image: dish.image || null,
     });
@@ -171,7 +166,7 @@ function Home() {
             <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
             <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-6 -translate-x-6" />
             <div className="relative z-10">
-              <p className="text-[10px] font-semibold uppercase tracking-wider opacity-80">{t('offers')}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider opacity-80">Offers</p>
               <p className="text-lg font-bold mt-1.5">{banner.title}</p>
               {banner.subtitle && <p className="text-xs mt-1.5 opacity-80">{banner.subtitle}</p>}
             </div>
@@ -182,7 +177,7 @@ function Home() {
       {/* Categories */}
       <section className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-gray-800">{t('categories')}</h2>
+          <h2 className="text-base font-bold text-gray-800">Categories</h2>
           <Link to="/menu" className="text-xs text-primary font-semibold">See All</Link>
         </div>
         {loading ? (
@@ -209,7 +204,7 @@ function Home() {
                   )}
                 </div>
                 <span className="text-[11px] font-medium text-gray-600 text-center leading-tight line-clamp-2">
-                  {isNepali ? cat.name_ne || cat.name : cat.name}
+                  {cat.name}
                 </span>
               </Link>
             ))}
@@ -220,7 +215,7 @@ function Home() {
       {/* Popular Dishes */}
       <section className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-gray-800">{t('popular')}</h2>
+          <h2 className="text-base font-bold text-gray-800">Popular Dishes</h2>
           <Link to="/menu" className="text-xs text-primary font-semibold">
             View All
           </Link>
@@ -247,7 +242,7 @@ function Home() {
                 </div>
                 <div className="p-3">
                   <h3 className="font-semibold text-gray-800 text-sm truncate">
-                    {isNepali ? dish.name_ne || dish.name : dish.name}
+                    {dish.name}
                   </h3>
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-bold text-gray-900 text-sm">

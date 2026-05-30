@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   HiOutlineMapPin,
@@ -22,7 +21,6 @@ import useAddressStore from '../store/useAddressStore';
 import api from '../services/api';
 
 function Checkout() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { items, getTotal, clearCart } = useCartStore();
   const { isAuthenticated } = useAuthStore();
@@ -265,7 +263,7 @@ function Checkout() {
 
   return (
     <div className="pb-28">
-      <TopNav title={t('checkout')} showBack={true} />
+      <TopNav title="Checkout" showBack={true} />
 
       {/* Delivery Address */}
       <div className="px-4 pt-4 mb-4">
@@ -273,7 +271,7 @@ function Checkout() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <HiOutlineMapPin className="w-4 h-4 text-primary" />
-              <h3 className="font-semibold text-gray-800 text-sm">{t('address')}</h3>
+              <h3 className="font-semibold text-gray-800 text-sm">Delivery Address</h3>
             </div>
             <button
               onClick={() => setShowAddressPicker(true)}
@@ -333,7 +331,7 @@ function Checkout() {
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-3">
             <HiOutlineCreditCard className="w-4 h-4 text-primary" />
-            <h3 className="font-semibold text-gray-800 text-sm">{t('payment')}</h3>
+            <h3 className="font-semibold text-gray-800 text-sm">Payment</h3>
           </div>
           <div className="space-y-2">
             <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-red-50 transition-colors">
@@ -345,7 +343,7 @@ function Checkout() {
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="accent-primary"
               />
-              <span className="text-sm text-gray-700">{t('cod')}</span>
+              <span className="text-sm text-gray-700">Cash on Delivery</span>
             </label>
             <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-red-50 transition-colors">
               <input
@@ -356,7 +354,7 @@ function Checkout() {
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="accent-primary"
               />
-              <span className="text-sm text-gray-700">{t('qr_payment')}</span>
+              <span className="text-sm text-gray-700">QR Payment</span>
             </label>
           </div>
 
@@ -447,7 +445,7 @@ function Checkout() {
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-3">
             <HiOutlineTicket className="w-4 h-4 text-primary" />
-            <h3 className="font-semibold text-gray-800 text-sm">{t('apply_coupon')}</h3>
+            <h3 className="font-semibold text-gray-800 text-sm">Apply Coupon</h3>
           </div>
 
           {appliedCoupon ? (
@@ -528,7 +526,7 @@ function Checkout() {
             )}
           </div>
           <div className="border-t border-gray-100 mt-3 pt-3 flex justify-between font-bold text-gray-800">
-            <span>{t('total')}</span>
+            <span>Total</span>
             <span>Rs. {finalTotal}</span>
           </div>
         </div>
@@ -545,7 +543,7 @@ function Checkout() {
             disabled={!selectedAddress || loading || (kitchenSettings.min_order_amount && total < Number(kitchenSettings.min_order_amount) && !items.some(i => i.isReward))}
             className="w-full bg-primary text-white py-3.5 rounded-2xl font-semibold text-sm disabled:opacity-50 active:scale-[0.98] transition-transform shadow-lg shadow-primary/25"
           >
-            {loading ? 'Placing Order...' : `${t('place_order')} • Rs. ${finalTotal}`}
+            {loading ? 'Placing Order...' : `Place Order • Rs. ${finalTotal}`}
           </button>
         </div>
       </div>

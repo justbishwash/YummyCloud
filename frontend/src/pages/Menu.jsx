@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { HiOutlineMagnifyingGlass, HiOutlineGift, HiOutlineTrophy, HiOutlineXMark } from 'react-icons/hi2';
 import TopNav from '../components/TopNav';
@@ -8,8 +7,6 @@ import useAuthStore from '../store/useAuthStore';
 import api from '../services/api';
 
 function Menu() {
-  const { t, i18n } = useTranslation();
-  const isNepali = i18n.language === 'ne';
   const [searchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const [activeCategory, setActiveCategory] = useState(initialCategory);
@@ -37,7 +34,7 @@ function Menu() {
     const fetchCategories = async () => {
       try {
         const res = await api.getCategories();
-        setCategories([{ id: 'all', name: 'All', name_ne: 'सबै' }, ...(res.categories || [])]);
+        setCategories([{ id: 'all', name: 'All' }, ...(res.categories || [])]);
       } catch (err) {
         console.error(err);
       }
@@ -68,8 +65,7 @@ function Menu() {
   const filteredItems = searchQuery
     ? menuItems.filter(
         (item) =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (item.name_ne && item.name_ne.includes(searchQuery))
+          item.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : menuItems;
 
@@ -77,7 +73,6 @@ function Menu() {
     addItem({
       id: item.id,
       name: item.name,
-      nameNe: item.name_ne,
       price: Number(item.price),
       image: item.image || null,
     });
@@ -86,7 +81,7 @@ function Menu() {
   return (
     <div className="pb-4 bg-gray-50 min-h-screen">
       <TopNav
-        title={t('menu')}
+        title="Menu"
         showBack={true}
       />
 
@@ -125,7 +120,7 @@ function Menu() {
               {cat.image && (
                 <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${cat.image}`} alt="" className="w-5 h-5 rounded-full object-cover" />
               )}
-              {isNepali ? cat.name_ne || cat.name : cat.name}
+              {cat.name}
             </button>
           ))}
         </div>
@@ -154,14 +149,14 @@ function Menu() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-800 text-sm truncate">{isNepali ? item.name_ne || item.name : item.name}</h4>
+                      <h4 className="font-medium text-gray-800 text-sm truncate">{item.name}</h4>
                       <p className="text-xs text-green-600 font-bold">FREE</p>
                     </div>
                     {inCart ? (
                       <span className="bg-green-100 text-green-700 text-xs px-3 py-1.5 rounded-lg font-medium">✓ Added</span>
                     ) : (
                       <button
-                        onClick={() => addItem({ id: item.id, name: item.name, nameNe: item.name_ne, price: 0, image: item.image, isReward: true })}
+                        onClick={() => addItem({ id: item.id, name: item.name, price: 0, image: item.image, isReward: true })}
                         className="bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium active:scale-90 transition-transform"
                       >
                         + CLAIM
@@ -213,7 +208,7 @@ function Menu() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-800 text-sm truncate">
-                    {isNepali ? item.name_ne || item.name : item.name}
+                    {item.name}
                   </h3>
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-bold text-gray-900 text-sm">

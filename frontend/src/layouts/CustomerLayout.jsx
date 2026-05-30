@@ -1,5 +1,4 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import {
   HiOutlineHome,
   HiHome,
@@ -15,38 +14,37 @@ import {
 import useCartStore from '../store/useCartStore';
 
 function CustomerLayout() {
-  const { t } = useTranslation();
   const itemCount = useCartStore((state) => state.getItemCount());
 
   const navItems = [
     {
       to: '/',
-      label: t('home'),
+      label: "Home",
       icon: HiOutlineHome,
       activeIcon: HiHome,
     },
     {
       to: '/menu',
-      label: t('menu'),
+      label: "Menu",
       icon: HiOutlineSquares2X2,
       activeIcon: HiSquares2X2,
     },
     {
       to: '/cart',
-      label: t('cart'),
+      label: "Cart",
       icon: HiOutlineShoppingBag,
       activeIcon: HiShoppingBag,
       badge: itemCount,
     },
     {
       to: '/orders',
-      label: t('orders'),
+      label: "Orders",
       icon: HiOutlineClipboardDocumentList,
       activeIcon: HiClipboardDocumentList,
     },
     {
       to: '/profile',
-      label: t('profile'),
+      label: "Profile",
       icon: HiOutlineUser,
       activeIcon: HiUser,
     },

@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   HiOutlineClipboardDocumentList,
   HiOutlineMapPin,
   HiOutlineWallet,
-  HiOutlineGlobeAlt,
   HiOutlineArrowRightOnRectangle,
   HiOutlineChevronRight,
   HiOutlineCog6Tooth,
@@ -18,7 +16,6 @@ import useAuthStore from '../store/useAuthStore';
 import api from '../services/api';
 
 function Profile() {
-  const { t, i18n } = useTranslation();
   const { isAuthenticated, user, logout } = useAuthStore();
   const [walletBalance, setWalletBalance] = useState(null);
   const [orderCount, setOrderCount] = useState(null);
@@ -35,21 +32,15 @@ function Profile() {
     });
   }, [isAuthenticated]);
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'ne' : 'en';
-    i18n.changeLanguage(newLang);
-    localStorage.setItem('lang', newLang);
-  };
-
   if (!isAuthenticated) {
     return (
       <>
-        <TopNav title={t('profile')} showBack={true} />
+        <TopNav title="Profile" showBack={true} />
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
           <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-5">
             <HiOutlineUserCircle className="w-14 h-14 text-gray-400" />
           </div>
-          <h2 className="text-lg font-bold text-gray-800 mb-1">{t('login')}</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-1">Login</h2>
           <p className="text-sm text-gray-500 mb-6 text-center max-w-[240px]">
             Sign in to view your profile, orders, wallet and more
           </p>
@@ -57,17 +48,8 @@ function Profile() {
             to="/login"
             className="bg-primary text-white px-8 py-3 rounded-2xl font-semibold text-sm active:scale-95 transition-transform shadow-lg shadow-primary/25"
           >
-            {t('login')}
+            Login
           </Link>
-
-          {/* Language Toggle */}
-          <button
-            onClick={toggleLanguage}
-            className="mt-8 flex items-center gap-2 text-sm text-gray-600 border border-gray-200 px-5 py-2.5 rounded-xl active:scale-95 transition-transform"
-          >
-            <HiOutlineGlobeAlt className="w-4 h-4" />
-            {i18n.language === 'en' ? t('nepali') : t('english')}
-          </button>
         </div>
       </>
     );
@@ -78,9 +60,9 @@ function Profile() {
     : 'U';
 
   const menuItems = [
-    { icon: HiOutlineClipboardDocumentList, label: t('order_history'), to: '/orders', color: 'text-blue-600', bg: 'bg-blue-50' },
-    { icon: HiOutlineMapPin, label: t('saved_addresses'), to: '/addresses', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { icon: HiOutlineWallet, label: t('wallet'), to: '/wallet', color: 'text-amber-600', bg: 'bg-amber-50' },
+    { icon: HiOutlineClipboardDocumentList, label: "My Orders", to: '/orders', color: 'text-blue-600', bg: 'bg-blue-50' },
+    { icon: HiOutlineMapPin, label: "Saved Addresses", to: '/addresses', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { icon: HiOutlineWallet, label: "Wallet", to: '/wallet', color: 'text-amber-600', bg: 'bg-amber-50' },
     { icon: HiOutlineEnvelope, label: 'Messages', to: '/messages', color: 'text-purple-600', bg: 'bg-purple-50' },
     { icon: HiOutlineCog6Tooth, label: 'Change Password', to: '/change-password', color: 'text-gray-600', bg: 'bg-gray-100' },
   ];
@@ -146,26 +128,6 @@ function Profile() {
         </div>
       </div>
 
-      {/* Preferences */}
-      <div className="px-4 mt-5">
-        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2.5 px-1">Preferences</p>
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          {/* Language Toggle */}
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-3.5 px-4 py-3.5 w-full active:bg-gray-50 transition-colors"
-          >
-            <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-              <HiOutlineGlobeAlt className="w-[18px] h-[18px] text-indigo-600" />
-            </div>
-            <span className="text-sm font-medium text-gray-700 flex-1 text-left">{t('language')}</span>
-            <span className="text-xs text-primary font-semibold bg-primary/5 px-2.5 py-1 rounded-lg">
-              {i18n.language === 'en' ? t('nepali') : t('english')}
-            </span>
-          </button>
-        </div>
-      </div>
-
       {/* Logout */}
       <div className="px-4 mt-5">
         <button
@@ -173,7 +135,7 @@ function Profile() {
           className="flex items-center justify-center gap-2.5 bg-white rounded-2xl shadow-sm px-4 py-3.5 w-full active:scale-[0.98] transition-transform border border-red-50"
         >
           <HiOutlineArrowRightOnRectangle className="w-5 h-5 text-red-500" />
-          <span className="text-sm font-semibold text-red-500">{t('logout')}</span>
+          <span className="text-sm font-semibold text-red-500">Logout</span>
         </button>
       </div>
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineClock, HiOutlineFunnel, HiOutlineArrowPath, HiOutlineClipboardDocumentList } from 'react-icons/hi2';
 import TopNav from '../components/TopNav';
@@ -26,7 +25,6 @@ const statusOptions = [
 ];
 
 function Orders() {
-  const { t } = useTranslation();
   const { isAuthenticated } = useAuthStore();
   const addItem = useCartStore((state) => state.addItem);
   const navigate = useNavigate();
@@ -95,7 +93,7 @@ function Orders() {
   return (
     <>
       <TopNav
-        title={t('my_orders')}
+        title="My Orders"
         showBack={true}
         rightAction={
           orders.length > 0 ? (
@@ -176,7 +174,7 @@ function Orders() {
           </div>
           <p className="text-sm text-gray-500 mb-4">Login to view your orders</p>
           <Link to="/login" className="bg-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
-            {t('login')}
+            Login
           </Link>
         </div>
       ) : loading ? (
@@ -198,7 +196,7 @@ function Orders() {
           </p>
           {orders.length === 0 && (
             <Link to="/menu" className="bg-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
-              {t('explore_menu')}
+              Explore Menu
             </Link>
           )}
         </div>
