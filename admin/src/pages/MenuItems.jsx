@@ -8,7 +8,7 @@ function MenuItems() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editItem, setEditItem] = useState(null);
-  const [form, setForm] = useState({ name: '', description: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null });
+  const [form, setForm] = useState({ name: '', description: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null, variants: [] });
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -32,6 +32,11 @@ function MenuItems() {
       if (form.image) formData.append('image', form.image);
       if (form.additionalImages) {
         form.additionalImages.forEach((file) => formData.append('images[]', file));
+      }
+      if (form.variants && form.variants.length > 0) {
+        formData.append('variants', JSON.stringify(form.variants));
+      } else {
+        formData.append('variants', JSON.stringify([]));
       }
 
       if (editItem) {
@@ -64,9 +69,9 @@ function MenuItems() {
     } catch (err) { alert(err.message); }
   };
 
-  const resetForm = () => { setShowForm(false); setEditItem(null); setForm({ name: '', description: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null }); };
+  const resetForm = () => { setShowForm(false); setEditItem(null); setForm({ name: '', description: '', price: '', category_id: '', is_available: true, is_featured: false, is_reward: false, image: null, variants: [] }); };
 
-  const openEdit = (item) => { setEditItem(item); setForm({ name: item.name, description: item.description || '', price: item.price, category_id: item.category_id, is_available: item.is_available, is_featured: item.is_featured, is_reward: item.is_reward || false, image: null }); setShowForm(true); };
+  const openEdit = (item) => { setEditItem(item); setForm({ name: item.name, description: item.description || '', price: item.price, category_id: item.category_id, is_available: item.is_available, is_featured: item.is_featured, is_reward: item.is_reward || false, image: null, variants: item.variants || [] }); setShowForm(true); };
 
   return (
     <div>
@@ -95,6 +100,31 @@ function MenuItems() {
                 <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_featured} onChange={(e) => setForm({ ...form, is_featured: e.target.checked })} className="accent-primary" /> Featured</label>
                 <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_reward} onChange={(e) => setForm({ ...form, is_reward: e.target.checked })} className="accent-amber-500" /> Reward Item</label>
                 <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_available} onChange={(e) => setForm({ ...form, is_available: e.target.checked })} className="accent-blue-600" /> Available</label>
+              </div>
+
+              {/* Variants Builder */}
+              <div className="border border-gray-200 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-medium text-gray-600">Variants (optional)</label>
+                  <button type="button" onClick={() => setForm({ ...form, variants: [...(form.variants || []), { name: '', options: [{ label: '', price: '' }] }] })} className="text-xs text-primary font-medium">+ Add Group</button>
+                </div>
+                {(form.variants || []).map((group, gi) => (
+                  <div key={gi} className="bg-gray-50 rounded-lg p-2.5 mb-2">
+                    <div className="flex items-center gap-2 mb-2">
+                      <input type="text" value={group.name} onChange={(e) => { const v = [...form.variants]; v[gi].name = e.target.value; setForm({ ...form, variants: v }); }} placeholder="Group name (e.g. Size, Flavor)" className="flex-1 border border-gray-200 rounded px-2 py-1.5 text-xs outline-none focus:border-primary" />
+                      <button type="button" onClick={() => { const v = form.variants.filter((_, i) => i !== gi); setForm({ ...form, variants: v }); }} className="text-red-400 text-xs font-medium">Remove</button>
+                    </div>
+                    {group.options.map((opt, oi) => (
+                      <div key={oi} className="flex items-center gap-1.5 mb-1">
+                        <input type="text" value={opt.label} onChange={(e) => { const v = [...form.variants]; v[gi].options[oi].label = e.target.value; setForm({ ...form, variants: v }); }} placeholder="Option (e.g. Half)" className="flex-1 border border-gray-200 rounded px-2 py-1 text-xs outline-none" />
+                        <input type="number" value={opt.price} onChange={(e) => { const v = [...form.variants]; v[gi].options[oi].price = e.target.value; setForm({ ...form, variants: v }); }} placeholder="Price" className="w-20 border border-gray-200 rounded px-2 py-1 text-xs outline-none" />
+                        <button type="button" onClick={() => { const v = [...form.variants]; v[gi].options = v[gi].options.filter((_, i) => i !== oi); setForm({ ...form, variants: v }); }} className="text-red-300 text-[10px]">✕</button>
+                      </div>
+                    ))}
+                    <button type="button" onClick={() => { const v = [...form.variants]; v[gi].options.push({ label: '', price: '' }); setForm({ ...form, variants: v }); }} className="text-[10px] text-primary font-medium mt-1">+ Add Option</button>
+                  </div>
+                ))}
+                {(!form.variants || form.variants.length === 0) && <p className="text-[10px] text-gray-400">No variants. Item will have a single price.</p>}
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600 mb-1 block">Main Image</label>

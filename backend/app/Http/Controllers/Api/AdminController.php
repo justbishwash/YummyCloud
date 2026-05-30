@@ -355,6 +355,9 @@ class AdminController extends Controller
             }
             $data['images'] = $paths;
         }
+        if ($request->has('variants')) {
+            $data['variants'] = is_string($request->variants) ? json_decode($request->variants, true) : $request->variants;
+        }
         $item = MenuItem::create($data);
         return response()->json(['item' => $item->load('category:id,name')], 201);
     }
@@ -371,6 +374,9 @@ class AdminController extends Controller
                 $paths[] = $file->store('menu-items', 'public');
             }
             $data['images'] = $paths;
+        }
+        if ($request->has('variants')) {
+            $data['variants'] = is_string($request->variants) ? json_decode($request->variants, true) : $request->variants;
         }
         $item->update($data);
         return response()->json(['item' => $item->load('category:id,name')]);

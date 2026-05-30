@@ -8,7 +8,7 @@ class MenuItem extends Model
 {
     protected $fillable = [
         'category_id', 'name', 'name_ne', 'description', 'description_ne',
-        'price', 'image', 'images', 'is_veg', 'is_available', 'is_featured', 'is_reward',
+        'price', 'image', 'images', 'variants', 'is_veg', 'is_available', 'is_featured', 'is_reward',
         'rating', 'rating_count', 'sort_order',
     ];
 
@@ -22,6 +22,7 @@ class MenuItem extends Model
             'is_featured' => 'boolean',
             'is_reward' => 'boolean',
             'images' => 'array',
+            'variants' => 'array',
         ];
     }
 

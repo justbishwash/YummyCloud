@@ -17,6 +17,7 @@ function Menu() {
   const [rewardData, setRewardData] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [selectedVariants, setSelectedVariants] = useState({});
   const addItem = useCartStore((state) => state.addItem);
 
   // Lock body scroll when popup is open
@@ -196,7 +197,7 @@ function Menu() {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                onClick={() => { setSelectedItem(item); setSlideIndex(0); }}
+                onClick={() => { setSelectedItem(item); setSlideIndex(0); setSelectedVariants({}); }}
                 className="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-sm border border-gray-100 cursor-pointer active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
@@ -244,6 +245,18 @@ function Menu() {
         const allImages = [];
         if (selectedItem.image) allImages.push(selectedItem.image);
         if (selectedItem.images) allImages.push(...selectedItem.images);
+        const hasVariants = selectedItem.variants && selectedItem.variants.length > 0;
+        
+        // Calculate total price with variants
+        let variantPrice = Number(selectedItem.price);
+        let variantLabel = '';
+        if (hasVariants) {
+          Object.values(selectedVariants).forEach((opt) => {
+            variantPrice = Number(opt.price) || variantPrice;
+            if (variantLabel) variantLabel += ', ';
+            variantLabel += opt.label;
+          });
+        }
 
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -281,9 +294,35 @@ function Menu() {
               {/* Content */}
               <div className="p-5">
                 <h2 className="text-lg font-bold text-gray-800">{selectedItem.name}</h2>
-                <p className="text-xl font-bold text-primary mt-1">Rs. {Number(selectedItem.price)}</p>
+                <p className="text-xl font-bold text-primary mt-1">Rs. {variantPrice}</p>
                 {selectedItem.description && (
                   <p className="text-sm text-gray-500 mt-3 leading-relaxed">{selectedItem.description}</p>
+                )}
+
+                {/* Variant Selectors */}
+                {hasVariants && (
+                  <div className="mt-4 space-y-3">
+                    {selectedItem.variants.map((group, gi) => (
+                      <div key={gi}>
+                        <label className="text-xs font-semibold text-gray-600 mb-1.5 block">{group.name}</label>
+                        <div className="flex flex-wrap gap-2">
+                          {group.options.map((opt, oi) => {
+                            const isSelected = selectedVariants[group.name]?.label === opt.label;
+                            return (
+                              <button
+                                key={oi}
+                                type="button"
+                                onClick={() => setSelectedVariants({ ...selectedVariants, [group.name]: opt })}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${isSelected ? 'bg-primary text-white border-primary' : 'bg-white text-gray-700 border-gray-200 active:scale-95'}`}
+                              >
+                                {opt.label} {Number(opt.price) > 0 && `• Rs.${opt.price}`}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
               </div>
@@ -291,10 +330,19 @@ function Menu() {
               {/* Fixed bottom button */}
               <div className="p-4 border-t border-gray-100 shrink-0">
                 <button
-                  onClick={() => { handleAddToCart(selectedItem); setSelectedItem(null); }}
+                  onClick={() => {
+                    addItem({
+                      id: selectedItem.id,
+                      name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
+                      price: variantPrice,
+                      image: selectedItem.image || null,
+                    });
+                    setSelectedItem(null);
+                    setSelectedVariants({});
+                  }}
                   className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
                 >
-                  + Add to Cart
+                  + Add to Cart • Rs. {variantPrice}
                 </button>
               </div>
             </div>
