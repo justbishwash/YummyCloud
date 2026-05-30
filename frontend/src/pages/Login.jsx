@@ -81,11 +81,11 @@ function Login() {
           {storeLogo ? (
             <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${storeLogo}`} alt="" className="w-full h-full object-cover rounded-full" />
           ) : (
-            <span className="text-3xl font-bold text-primary">{(storeName || 'CloudKitchen').charAt(0)}</span>
+            <span className="text-3xl font-bold text-primary">{(storeName || 'Store').charAt(0)}</span>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-white">{storeName || 'CloudKitchen'}</h1>
-        <p className="text-sm text-white/80 mt-1">Delicious food, delivered fast</p>
+        <h1 className="text-2xl font-bold text-white">{storeName || 'Store'}</h1>
+        <p className="text-sm text-white/80 mt-1">Everything you need, delivered</p>
       </div>
 
       {/* Form Card */}

@@ -22,7 +22,7 @@ function Splash() {
 
       {/* App Name */}
       <h1 className="text-3xl font-bold text-white mt-6">t('app_name')</h1>
-      <p className="text-sm text-white/70 mt-2">Delicious food, delivered fast</p>
+      <p className="text-sm text-white/70 mt-2">Everything you need, delivered</p>
 
       {/* Loading indicator */}
       <div className="mt-12 flex gap-1.5">

@@ -34,7 +34,7 @@ function Home() {
   const [storeOpenTime, setStoreOpenTime] = useState('');
   const [notice, setNotice] = useState(null);
 
-  useEffect(() => { document.title = `${appName || 'CloudKitchen'} - Order Online`; }, [appName]);
+  useEffect(() => { document.title = `${appName || 'Store'} - Order Online`; }, [appName]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,7 +103,7 @@ function Home() {
             className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3.5 border border-white/10"
           >
             <HiOutlineMagnifyingGlass className="w-5 h-5 text-white/60" />
-            <span className="text-sm text-white/60">Search for products & services...</span>
+            <span className="text-sm text-white/60">Search for products...</span>
           </Link>
         </div>
       </header>

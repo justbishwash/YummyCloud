@@ -706,7 +706,7 @@ function Checkout() {
             </div>
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mt-6">Order Placed!</h2>
-          <p className="text-sm text-gray-500 mt-2">Your food is being prepared</p>
+          <p className="text-sm text-gray-500 mt-2">Your order is being processed</p>
           <p className="text-xs text-gray-400 mt-4">Redirecting to orders...</p>
         </div>
       )}

@@ -93,7 +93,7 @@ function Menu() {
           <HiOutlineMagnifyingGlass className="w-5 h-5 text-gray-400 shrink-0" />
           <input
             type="text"
-            placeholder="Search dishes..."
+            placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent outline-none text-sm flex-1 text-gray-700 placeholder-gray-400"

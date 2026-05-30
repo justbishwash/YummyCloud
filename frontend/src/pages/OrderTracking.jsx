@@ -17,7 +17,7 @@ import api from '../services/api';
 const steps = [
   { key: 'pending', label: 'Order Placed', icon: HiOutlineClock },
   { key: 'confirmed', label: 'Confirmed', icon: HiOutlineCheckCircle },
-  { key: 'preparing', label: 'Preparing', icon: HiOutlineFire },
+  { key: 'preparing', label: 'Processing', icon: HiOutlineFire },
   { key: 'on_the_way', label: 'On the Way', icon: HiOutlineTruck },
   { key: 'delivered', label: 'Delivered', icon: HiOutlineHome },
 ];
