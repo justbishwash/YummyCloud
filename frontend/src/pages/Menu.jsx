@@ -18,6 +18,7 @@ function Menu() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedVariants, setSelectedVariants] = useState({});
+  const [popupQty, setPopupQty] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
 
   // Lock body scroll when popup is open
@@ -197,7 +198,7 @@ function Menu() {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                onClick={() => { setSelectedItem(item); setSlideIndex(0); setSelectedVariants({}); }}
+                onClick={() => { setSelectedItem(item); setSlideIndex(0); setSelectedVariants({}); setPopupQty(1); }}
                 className="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-sm border border-gray-100 cursor-pointer active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
@@ -216,7 +217,7 @@ function Menu() {
                       Rs. {Number(item.price)}
                     </span>
                     <button
-                      onClick={(e) => { e.stopPropagation(); if (item.variants && item.variants.length > 0) { setSelectedItem(item); setSlideIndex(0); setSelectedVariants({}); } else { handleAddToCart(item); } }}
+                      onClick={(e) => { e.stopPropagation(); if (item.variants && item.variants.length > 0) { setSelectedItem(item); setSlideIndex(0); setSelectedVariants({}); setPopupQty(1); } else { handleAddToCart(item); } }}
                       className="bg-primary/10 text-primary text-xs px-3.5 py-1.5 rounded-lg font-bold active:scale-90 active:bg-primary active:text-white transition-all"
                     >
                       + ADD
@@ -330,22 +331,39 @@ function Menu() {
                 )}
 
                 <div className="px-4 pb-4 pt-2">
+                  {/* Quantity Selector */}
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-semibold text-gray-600">Quantity</span>
+                    <div className="flex items-center gap-2 bg-gray-50 rounded-xl p-1">
+                      <button onClick={() => setPopupQty(Math.max(1, popupQty - 1))} className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-gray-600 active:scale-90 transition-transform border border-gray-100">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
+                      </button>
+                      <span className="text-sm font-bold w-6 text-center">{popupQty}</span>
+                      <button onClick={() => setPopupQty(popupQty + 1)} className="w-8 h-8 rounded-lg bg-primary text-white shadow-sm flex items-center justify-center active:scale-90 transition-transform">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                      </button>
+                    </div>
+                  </div>
+
                   <button
                     onClick={() => {
                       const cartKey = selectedItem.id + (variantLabel ? `-${variantLabel}` : '');
-                      addItem({
-                        id: selectedItem.id,
-                        cartKey,
-                        name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
-                        price: variantPrice,
-                        image: selectedItem.image || null,
-                      });
+                      for (let i = 0; i < popupQty; i++) {
+                        addItem({
+                          id: selectedItem.id,
+                          cartKey,
+                          name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
+                          price: variantPrice,
+                          image: selectedItem.image || null,
+                        });
+                      }
                       setSelectedItem(null);
                       setSelectedVariants({});
+                      setPopupQty(1);
                     }}
                     className="w-full bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
                   >
-                    + Add to Cart • Rs. {variantPrice}
+                    + Add {popupQty > 1 ? `${popupQty} items` : 'to Cart'} • Rs. {variantPrice * popupQty}
                   </button>
                 </div>
               </div>
