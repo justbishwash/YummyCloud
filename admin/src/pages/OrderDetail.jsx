@@ -166,13 +166,37 @@ function OrderDetail() {
             </button>
           </div>
 
-          {/* Delivery Partner */}
-          <div>
-            <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Delivery Partner {!order.delivery_partner_id && <span className="text-red-400">(required for On the Way)</span>}</label>
-            <select onChange={(e) => handleAssign(e.target.value)} value={order.delivery_partner_id || ''} className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full max-w-xs outline-none focus:border-primary">
-              <option value="">Select partner</option>
-              {partners.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.phone})</option>)}
-            </select>
+          {/* Delivery Partner + Tracking */}
+          <div className="space-y-3">
+            <div>
+              <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Delivery Partner {!order.delivery_partner_id && <span className="text-red-400">(required for On the Way)</span>}</label>
+              <select onChange={(e) => setOrder((prev) => ({ ...prev, _selectedPartner: e.target.value }))} value={order._selectedPartner || order.delivery_partner_id || ''} className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-primary">
+                <option value="">Select partner</option>
+                {partners.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.phone})</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Tracking Code</label>
+              <input type="text" value={order._trackingCode ?? order.tracking_code ?? ''} onChange={(e) => setOrder((prev) => ({ ...prev, _trackingCode: e.target.value }))} placeholder="Enter tracking number (optional)" className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-primary" />
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={order._skipSms || false} onChange={(e) => setOrder((prev) => ({ ...prev, _skipSms: e.target.checked }))} className="rounded" />
+              <span className="text-xs text-gray-600">Don't send tracking SMS to customer</span>
+            </label>
+            <button
+              onClick={async () => {
+                const partnerId = order._selectedPartner || order.delivery_partner_id;
+                if (!partnerId) { alert('Select a partner first'); return; }
+                try {
+                  await api.assignDelivery(id, partnerId, order._trackingCode || null, order._skipSms || false);
+                  setOrder((prev) => ({ ...prev, delivery_partner_id: parseInt(partnerId), tracking_code: order._trackingCode || prev.tracking_code }));
+                  alert('Partner assigned' + (order._trackingCode && !order._skipSms ? ' & tracking SMS sent!' : '!'));
+                } catch (err) { alert(err.message); }
+              }}
+              className="bg-primary text-white px-4 py-2 rounded-lg text-xs font-medium w-full"
+            >
+              Assign Partner
+            </button>
           </div>
         </div>
       )}

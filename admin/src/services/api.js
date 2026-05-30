@@ -60,7 +60,7 @@ class AdminApi {
   getOrders(params = '') { return this.request(`/admin/orders${params}`); }
   getOrder(id) { return this.request(`/admin/orders/${id}`); }
   updateOrderStatus(id, status) { return this.request(`/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }); }
-  assignDelivery(orderId, partnerId) { return this.request(`/admin/orders/${orderId}/assign`, { method: 'PUT', body: JSON.stringify({ delivery_partner_id: partnerId }) }); }
+  assignDelivery(orderId, partnerId, trackingCode = null, skipSms = false) { return this.request(`/admin/orders/${orderId}/assign`, { method: 'PUT', body: JSON.stringify({ delivery_partner_id: partnerId, tracking_code: trackingCode, skip_tracking_sms: skipSms }) }); }
 
   // Menu
   getCategories() { return this.request('/admin/categories'); }

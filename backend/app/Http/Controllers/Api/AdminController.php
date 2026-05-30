@@ -197,10 +197,32 @@ class AdminController extends Controller
 
     public function assignDelivery(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
-        $request->validate(['delivery_partner_id' => 'required|exists:users,id']);
-        $order->update(['delivery_partner_id' => $request->delivery_partner_id]);
-        return response()->json(['message' => 'Delivery partner assigned.']);
+        $order = Order::with('user')->findOrFail($id);
+        $request->validate([
+            'delivery_partner_id' => 'required|exists:users,id',
+            'tracking_code' => 'nullable|string|max:100',
+            'skip_tracking_sms' => 'nullable|boolean',
+        ]);
+        
+        $order->update([
+            'delivery_partner_id' => $request->delivery_partner_id,
+            'tracking_code' => $request->tracking_code,
+        ]);
+
+        // Send tracking SMS to customer if tracking code provided and not skipped
+        if ($request->tracking_code && !$request->skip_tracking_sms && $order->user) {
+            $partner = User::find($request->delivery_partner_id);
+            $firstName = explode(' ', $order->user->name)[0];
+            $message = "Dear {$firstName}, your tracking number for {$partner->name} is {$request->tracking_code}. For any delivery related issue, kindly contact at: {$partner->phone}.";
+            
+            try {
+                app(\App\Services\SmsService::class)->send($order->user->phone, $message);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning('Tracking SMS failed: ' . $e->getMessage());
+            }
+        }
+
+        return response()->json(['message' => 'Delivery partner assigned.' . ($request->tracking_code && !$request->skip_tracking_sms ? ' Tracking SMS sent.' : '')]);
     }
 
     // Admin cancel order
