@@ -10,7 +10,15 @@ class AddressController extends Controller
 {
     public function index(Request $request)
     {
-        $addresses = $request->user()->addresses()->orderByDesc('is_default')->get();
+        $addresses = $request->user()->addresses()
+            ->with('city:id,name,province_id,delivery_fee', 'city.province:id,name')
+            ->orderByDesc('is_default')
+            ->get()
+            ->map(function ($addr) {
+                $addr->city_name = $addr->city?->name;
+                $addr->province_name = $addr->city?->province?->name;
+                return $addr;
+            });
         return response()->json(['addresses' => $addresses]);
     }
 

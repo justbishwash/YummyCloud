@@ -236,11 +236,18 @@ function Checkout() {
     }
 
     try {
+      // Build full address string with city/province
+      let fullAddress = `${selectedAddress.label}: ${selectedAddress.address}`;
+      if (selectedAddress.detail) fullAddress += `, ${selectedAddress.detail}`;
+      if (selectedAddress.city_name) fullAddress += ` - ${selectedAddress.city_name}`;
+      if (selectedAddress.province_name) fullAddress += `, ${selectedAddress.province_name}`;
+
       const orderData = {
         items: items.map((item) => ({ id: item.id, quantity: item.quantity, variant_price: item.price, variant_label: item.name.includes('(') ? item.name.split('(')[1]?.replace(')', '') : null })),
-        address: `${selectedAddress.label}: ${selectedAddress.address}${selectedAddress.detail ? ', ' + selectedAddress.detail : ''}`,
+        address: fullAddress,
         customer_lat: customerLat,
         customer_lng: customerLng,
+        city_id: selectedAddress.city_id || null,
         payment_method: paymentMethod,
         coupon_code: appliedCoupon?.code || null,
         note: note || null,

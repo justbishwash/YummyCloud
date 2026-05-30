@@ -48,6 +48,7 @@ class OrderController extends Controller
             'coupon_code' => 'nullable|string',
             'note' => 'nullable|string|max:500',
             'use_wallet' => 'nullable|boolean',
+            'city_id' => 'nullable|integer|exists:cities,id',
         ]);
 
         // Calculate totals
@@ -195,21 +196,31 @@ class OrderController extends Controller
             }
         }
 
-        // Delivery fee - calculate based on distance if presets exist
+        // Delivery fee - check city fee first, then distance presets, then default
         $deliveryFee = (float) \App\Models\Setting::get('delivery_fee', 0);
-        $storeLat = \App\Models\Setting::get('store_lat');
-        $storeLng = \App\Models\Setting::get('store_lng');
-        $presets = json_decode(\App\Models\Setting::get('delivery_charge_presets', '[]'), true);
+        
+        // If city_id is provided, use city's delivery fee
+        if ($request->city_id) {
+            $city = \App\Models\City::find($request->city_id);
+            if ($city && $city->delivery_fee > 0) {
+                $deliveryFee = (float) $city->delivery_fee;
+            }
+        } else {
+            // Fall back to distance-based presets
+            $storeLat = \App\Models\Setting::get('store_lat');
+            $storeLng = \App\Models\Setting::get('store_lng');
+            $presets = json_decode(\App\Models\Setting::get('delivery_charge_presets', '[]'), true);
 
-        if ($storeLat && $storeLng && $request->customer_lat && $request->customer_lng && !empty($presets)) {
-            $distance = $this->getDistanceKm(
-                (float) $storeLat, (float) $storeLng,
-                (float) $request->customer_lat, (float) $request->customer_lng
-            );
-            foreach ($presets as $preset) {
-                if ($distance >= (float) $preset['from'] && $distance <= (float) $preset['to']) {
-                    $deliveryFee = (float) $preset['fee'];
-                    break;
+            if ($storeLat && $storeLng && $request->customer_lat && $request->customer_lng && !empty($presets)) {
+                $distance = $this->getDistanceKm(
+                    (float) $storeLat, (float) $storeLng,
+                    (float) $request->customer_lat, (float) $request->customer_lng
+                );
+                foreach ($presets as $preset) {
+                    if ($distance >= (float) $preset['from'] && $distance <= (float) $preset['to']) {
+                        $deliveryFee = (float) $preset['fee'];
+                        break;
+                    }
                 }
             }
         }

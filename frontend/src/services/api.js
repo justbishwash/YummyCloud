@@ -137,6 +137,9 @@ class ApiService {
       if (orderData.coupon_code) formData.append('coupon_code', orderData.coupon_code);
       if (orderData.note) formData.append('note', orderData.note);
       formData.append('payment_screenshot', orderData.payment_screenshot);
+      if (orderData.city_id) formData.append('city_id', orderData.city_id);
+      if (orderData.customer_lat) formData.append('customer_lat', orderData.customer_lat);
+      if (orderData.customer_lng) formData.append('customer_lng', orderData.customer_lng);
       orderData.items.forEach((item, i) => {
         formData.append(`items[${i}][id]`, item.id);
         formData.append(`items[${i}][quantity]`, item.quantity);
