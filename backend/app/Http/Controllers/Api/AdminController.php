@@ -318,14 +318,23 @@ class AdminController extends Controller
     public function categories() { return response()->json(['categories' => Category::orderBy('sort_order')->get()]); }
     public function createCategory(Request $request)
     {
-        $request->validate(['name' => 'required|string']);
-        $cat = Category::create($request->only('name', 'name_ne', 'icon'));
+        $request->validate(['name' => 'required|string', 'image' => 'nullable|image|max:5120']);
+        $data = $request->only('name', 'name_ne', 'icon');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+        $cat = Category::create($data);
         return response()->json(['category' => $cat], 201);
     }
     public function updateCategory(Request $request, $id)
     {
         $cat = Category::findOrFail($id);
-        $cat->update($request->only('name', 'name_ne', 'icon', 'is_active'));
+        $request->validate(['image' => 'nullable|image|max:5120']);
+        $data = $request->only('name', 'name_ne', 'icon', 'is_active');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+        $cat->update($data);
         return response()->json(['category' => $cat]);
     }
     public function deleteCategory($id) { Category::findOrFail($id)->delete(); return response()->json(['message' => 'Deleted.']); }

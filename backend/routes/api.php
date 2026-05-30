@@ -147,6 +147,7 @@ Route::middleware(['auth:sanctum', 'verify.license'])->prefix('admin')->group(fu
     Route::get('/categories', [AdminController::class, 'categories']);
     Route::post('/categories', [AdminController::class, 'createCategory']);
     Route::put('/categories/{id}', [AdminController::class, 'updateCategory']);
+    Route::post('/categories/{id}', [AdminController::class, 'updateCategory']);
     Route::delete('/categories/{id}', [AdminController::class, 'deleteCategory']);
 
     Route::get('/menu-items', [AdminController::class, 'menuItems']);
