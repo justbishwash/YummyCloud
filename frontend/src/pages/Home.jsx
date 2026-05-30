@@ -191,39 +191,37 @@ function Home() {
         )}
       </section>
 
-      {/* Trust Cards */}
+      {/* Trust Card */}
       <section className="px-4 mt-6">
-        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-          <div className="shrink-0 w-[140px] bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-100">
-            <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
-              <HiOutlineBolt className="w-4.5 h-4.5 text-blue-600" />
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div className="grid grid-cols-4 gap-3">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
+                <HiOutlineBolt className="w-4.5 h-4.5 text-blue-600" />
+              </div>
+              <p className="text-[10px] font-semibold text-gray-700 mt-1.5 leading-tight">39 Min<br/>Delivery</p>
             </div>
-            <p className="text-xs font-bold text-gray-800 mt-2">39 Min Delivery</p>
-            <p className="text-[10px] text-gray-500 mt-0.5">Local orders delivered fast</p>
-          </div>
-          <div className="shrink-0 w-[140px] bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100">
-            <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center">
-              <HiOutlineCurrencyDollar className="w-4.5 h-4.5 text-green-600" />
+            <div className="flex flex-col items-center text-center">
+              <div className="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center">
+                <HiOutlineCurrencyDollar className="w-4.5 h-4.5 text-green-600" />
+              </div>
+              <p className="text-[10px] font-semibold text-gray-700 mt-1.5 leading-tight">Best<br/>Prices</p>
             </div>
-            <p className="text-xs font-bold text-gray-800 mt-2">Best Prices</p>
-            <p className="text-[10px] text-gray-500 mt-0.5">Guaranteed lowest rates</p>
-          </div>
-          <div className="shrink-0 w-[140px] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100">
-            <div className="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center">
-              <HiOutlineGlobeAlt className="w-4.5 h-4.5 text-purple-600" />
+            <div className="flex flex-col items-center text-center">
+              <div className="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center">
+                <HiOutlineGlobeAlt className="w-4.5 h-4.5 text-purple-600" />
+              </div>
+              <p className="text-[10px] font-semibold text-gray-700 mt-1.5 leading-tight">Nation<br/>wide</p>
             </div>
-            <p className="text-xs font-bold text-gray-800 mt-2">Nationwide</p>
-            <p className="text-[10px] text-gray-500 mt-0.5">Ship anywhere in Nepal</p>
-          </div>
-          <div className="shrink-0 w-[140px] bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-100">
-            <div className="w-8 h-8 bg-amber-100 rounded-xl flex items-center justify-center">
-              <HiOutlineShieldCheck className="w-4.5 h-4.5 text-amber-600" />
+            <div className="flex flex-col items-center text-center">
+              <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
+                <HiOutlineShieldCheck className="w-4.5 h-4.5 text-amber-600" />
+              </div>
+              <p className="text-[10px] font-semibold text-gray-700 mt-1.5 leading-tight">Secure<br/>Payments</p>
             </div>
-            <p className="text-xs font-bold text-gray-800 mt-2">Secure Payments</p>
-            <p className="text-[10px] text-gray-500 mt-0.5">COD & QR available</p>
           </div>
+          <p className="text-[9px] text-gray-400 mt-3 text-center">*T&C Applied. Delivery time varies by location.</p>
         </div>
-        <p className="text-[9px] text-gray-400 mt-2 px-1">*T&C Applied. Delivery time varies by location.</p>
       </section>
     </div>
   );
