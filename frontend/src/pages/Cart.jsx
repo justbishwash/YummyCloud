@@ -77,7 +77,7 @@ function Cart() {
             </div>
             <div className="flex items-center gap-1.5 bg-gray-50 rounded-xl p-1">
               <button
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                onClick={() => updateQuantity(item.cartKey || String(item.id), item.quantity - 1)}
                 className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center text-gray-600 active:scale-90 transition-transform border border-gray-100"
               >
                 <HiMinus className="w-3.5 h-3.5" />
@@ -86,7 +86,7 @@ function Cart() {
                 {item.quantity}
               </span>
               <button
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                onClick={() => updateQuantity(item.cartKey || String(item.id), item.quantity + 1)}
                 className="w-7 h-7 rounded-lg bg-primary text-white shadow-sm flex items-center justify-center active:scale-90 transition-transform"
               >
                 <HiPlus className="w-3.5 h-3.5" />

@@ -332,8 +332,10 @@ function Menu() {
                 <div className="px-4 pb-4 pt-2">
                   <button
                     onClick={() => {
+                      const cartKey = selectedItem.id + (variantLabel ? `-${variantLabel}` : '');
                       addItem({
                         id: selectedItem.id,
+                        cartKey,
                         name: selectedItem.name + (variantLabel ? ` (${variantLabel})` : ''),
                         price: variantPrice,
                         image: selectedItem.image || null,
