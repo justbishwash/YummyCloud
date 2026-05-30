@@ -356,7 +356,11 @@ class AdminController extends Controller
             $data['images'] = $paths;
         }
         if ($request->has('variants')) {
-            $data['variants'] = is_string($request->variants) ? json_decode($request->variants, true) : $request->variants;
+            $variants = $request->variants;
+            if (is_string($variants)) {
+                $variants = json_decode($variants, true) ?: [];
+            }
+            $data['variants'] = !empty($variants) ? $variants : null;
         }
         $item = MenuItem::create($data);
         return response()->json(['item' => $item->load('category:id,name')], 201);
@@ -376,7 +380,11 @@ class AdminController extends Controller
             $data['images'] = $paths;
         }
         if ($request->has('variants')) {
-            $data['variants'] = is_string($request->variants) ? json_decode($request->variants, true) : $request->variants;
+            $variants = $request->variants;
+            if (is_string($variants)) {
+                $variants = json_decode($variants, true) ?: [];
+            }
+            $data['variants'] = !empty($variants) ? $variants : null;
         }
         $item->update($data);
         return response()->json(['item' => $item->load('category:id,name')]);
