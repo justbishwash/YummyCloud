@@ -4,14 +4,16 @@ import {
   HiOutlineMagnifyingGlass,
   HiOutlineMoon,
   HiOutlineBell,
+  HiOutlineBolt,
+  HiOutlineCurrencyDollar,
+  HiOutlineGlobeAlt,
+  HiOutlineShieldCheck,
 } from 'react-icons/hi2';
-import useCartStore from '../store/useCartStore';
 import useAuthStore from '../store/useAuthStore';
 import useAppStore from '../store/useAppStore';
 import api from '../services/api';
 
 function Home() {
-  const addItem = useCartStore((state) => state.addItem);
   const { user } = useAuthStore();
   const appName = useAppStore((s) => s.appName);
 
@@ -26,7 +28,6 @@ function Home() {
   const firstName = user?.name?.split(' ')[0] || 'Guest';
 
   const [categories, setCategories] = useState([]);
-  const [popularDishes, setPopularDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [banner, setBanner] = useState(null);
   const [storeClosed, setStoreClosed] = useState(false);
@@ -38,14 +39,11 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [catRes, menuRes, settingsRes] = await Promise.all([
+        const [catRes, settingsRes] = await Promise.all([
           api.getCategories(),
-          api.getMenuItems(),
           api.getPublicSettings(),
         ]);
         setCategories(catRes.categories || []);
-        const featured = (menuRes.items || []).filter((i) => i.is_featured);
-        setPopularDishes(featured.length > 0 ? featured : (menuRes.items || []).slice(0, 6));
         const s = settingsRes.settings || {};
         if (s.banner_enabled === 'true' && s.banner_title) {
           setBanner({ title: s.banner_title, subtitle: s.banner_subtitle });
@@ -77,15 +75,6 @@ function Home() {
     };
     fetchData();
   }, []);
-
-  const handleAddToCart = (dish) => {
-    addItem({
-      id: dish.id,
-      name: dish.name,
-      price: Number(dish.price),
-      image: dish.image || null,
-    });
-  };
 
   return (
     <div className="pb-4">
@@ -202,45 +191,40 @@ function Home() {
         )}
       </section>
 
-      {/* Popular / Featured Items */}
-      {popularDishes.length > 0 && (
-        <section className="px-4 mt-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-bold text-gray-800">Popular</h2>
-            <Link to="/menu" className="text-xs text-primary font-semibold">View All</Link>
+      {/* Trust Cards */}
+      <section className="px-4 mt-6">
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+          <div className="shrink-0 w-[140px] bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-100">
+            <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
+              <HiOutlineBolt className="w-4.5 h-4.5 text-blue-600" />
+            </div>
+            <p className="text-xs font-bold text-gray-800 mt-2">39 Min Delivery</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">Local orders delivered fast</p>
           </div>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-            {popularDishes.slice(0, 8).map((dish) => (
-              <div
-                key={dish.id}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden shrink-0 w-[150px]"
-              >
-                <div className="w-full h-24 bg-gray-100 overflow-hidden">
-                  {dish.image ? (
-                    <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${dish.image}`} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-12.75H6A2.25 2.25 0 003.75 6v12a2.25 2.25 0 002.25 2.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75z" /></svg>
-                    </div>
-                  )}
-                </div>
-                <div className="p-2.5">
-                  <h3 className="font-semibold text-gray-800 text-xs truncate">{dish.name}</h3>
-                  <div className="flex items-center justify-between mt-1.5">
-                    <span className="font-bold text-gray-900 text-xs">Rs. {Number(dish.price)}</span>
-                    <button
-                      onClick={() => handleAddToCart(dish)}
-                      className="w-6 h-6 bg-primary rounded-md flex items-center justify-center text-white active:scale-90 transition-transform"
-                    >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="shrink-0 w-[140px] bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100">
+            <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center">
+              <HiOutlineCurrencyDollar className="w-4.5 h-4.5 text-green-600" />
+            </div>
+            <p className="text-xs font-bold text-gray-800 mt-2">Best Prices</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">Guaranteed lowest rates</p>
           </div>
-        </section>
-      )}
+          <div className="shrink-0 w-[140px] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100">
+            <div className="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center">
+              <HiOutlineGlobeAlt className="w-4.5 h-4.5 text-purple-600" />
+            </div>
+            <p className="text-xs font-bold text-gray-800 mt-2">Nationwide</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">Ship anywhere in Nepal</p>
+          </div>
+          <div className="shrink-0 w-[140px] bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-100">
+            <div className="w-8 h-8 bg-amber-100 rounded-xl flex items-center justify-center">
+              <HiOutlineShieldCheck className="w-4.5 h-4.5 text-amber-600" />
+            </div>
+            <p className="text-xs font-bold text-gray-800 mt-2">Secure Payments</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">COD & QR available</p>
+          </div>
+        </div>
+        <p className="text-[9px] text-gray-400 mt-2 px-1">*T&C Applied. Delivery time varies by location.</p>
+      </section>
     </div>
   );
 }
