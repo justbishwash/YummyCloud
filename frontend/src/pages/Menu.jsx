@@ -259,15 +259,15 @@ function Menu() {
         }
 
         return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-end justify-center">
             <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedItem(null)} />
-            <div className="relative bg-white rounded-2xl w-full sm:max-w-md max-h-[75vh] flex flex-col overflow-hidden">
+            <div className="relative bg-white rounded-t-3xl w-full sm:max-w-md max-h-[80vh] flex flex-col overflow-hidden animate-slide-up">
               {/* Scrollable content */}
               <div className="overflow-y-auto flex-1">
               {/* Image Slider */}
               {allImages.length > 0 && (
                 <div className="relative">
-                  <div className="w-full h-44 overflow-hidden rounded-t-2xl bg-gray-100">
+                  <div className="w-full h-44 overflow-hidden rounded-t-3xl bg-gray-100">
                     <img src={`${storageUrl}${allImages[slideIndex] || allImages[0]}`} alt="" className="w-full h-full object-cover" />
                   </div>
                   {allImages.length > 1 && (
