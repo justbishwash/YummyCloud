@@ -242,6 +242,11 @@ class ApiService {
     return this.request('/messages/read-all', { method: 'POST' });
   }
 
+  // Locations
+  getLocations() {
+    return this.request('/locations');
+  }
+
   // Ratings
   rateOrder(orderId, rating, review) {
     return this.request(`/orders/${orderId}/rate`, {

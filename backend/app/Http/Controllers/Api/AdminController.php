@@ -570,6 +570,53 @@ class AdminController extends Controller
         return response()->json($result);
     }
 
+    // Locations
+    public function locations()
+    {
+        $provinces = \App\Models\Province::with('cities')->orderBy('sort_order')->get();
+        return response()->json(['provinces' => $provinces]);
+    }
+
+    public function createProvince(Request $request)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+        $province = \App\Models\Province::create($request->only('name', 'sort_order'));
+        return response()->json(['province' => $province->load('cities')], 201);
+    }
+
+    public function updateProvince(Request $request, $id)
+    {
+        $province = \App\Models\Province::findOrFail($id);
+        $province->update($request->only('name', 'sort_order'));
+        return response()->json(['province' => $province->load('cities')]);
+    }
+
+    public function deleteProvince($id)
+    {
+        \App\Models\Province::findOrFail($id)->delete();
+        return response()->json(['message' => 'Deleted.']);
+    }
+
+    public function createCity(Request $request)
+    {
+        $request->validate(['province_id' => 'required|exists:provinces,id', 'name' => 'required|string|max:255']);
+        $city = \App\Models\City::create($request->only('province_id', 'name', 'delivery_fee', 'is_local', 'sort_order'));
+        return response()->json(['city' => $city], 201);
+    }
+
+    public function updateCity(Request $request, $id)
+    {
+        $city = \App\Models\City::findOrFail($id);
+        $city->update($request->only('name', 'delivery_fee', 'is_local', 'sort_order'));
+        return response()->json(['city' => $city]);
+    }
+
+    public function deleteCity($id)
+    {
+        \App\Models\City::findOrFail($id)->delete();
+        return response()->json(['message' => 'Deleted.']);
+    }
+
     // Settings
     public function getSettings()
     {

@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { HiOutlineHome, HiOutlineClipboardDocumentList, HiOutlineSquares2X2, HiOutlineTag, HiOutlineUsers, HiOutlineChatBubbleLeft, HiOutlineBanknotes, HiOutlineArrowRightOnRectangle, HiOutlineBars3, HiOutlineChartBar, HiOutlineTruck, HiOutlineCog6Tooth, HiOutlineStar, HiOutlineWallet } from 'react-icons/hi2';
+import { HiOutlineHome, HiOutlineClipboardDocumentList, HiOutlineSquares2X2, HiOutlineTag, HiOutlineUsers, HiOutlineChatBubbleLeft, HiOutlineBanknotes, HiOutlineArrowRightOnRectangle, HiOutlineBars3, HiOutlineChartBar, HiOutlineTruck, HiOutlineCog6Tooth, HiOutlineStar, HiOutlineWallet, HiOutlineMapPin } from 'react-icons/hi2';
 import { useState, useEffect } from 'react';
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { to: '/users', icon: HiOutlineUsers, label: 'Customers' },
   { to: '/wallets', icon: HiOutlineWallet, label: 'Wallets' },
   { to: '/delivery-partners', icon: HiOutlineTruck, label: 'Delivery Partners' },
+  { to: '/locations', icon: HiOutlineMapPin, label: 'Locations' },
   { to: '/messages', icon: HiOutlineChatBubbleLeft, label: 'Messages' },
   { to: '/refunds', icon: HiOutlineBanknotes, label: 'Refunds' },
   { to: '/reviews', icon: HiOutlineStar, label: 'Reviews' },

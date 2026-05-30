@@ -27,6 +27,13 @@ Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/categories', [MenuController::class, 'categories']);
 Route::get('/menu', [MenuController::class, 'index']);
 Route::get('/menu/search', [MenuController::class, 'search']);
+
+// Locations (public)
+Route::get('/locations', function () {
+    $provinces = \App\Models\Province::with('cities:id,province_id,name,delivery_fee,is_local')->orderBy('sort_order')->get(['id', 'name']);
+    return response()->json(['provinces' => $provinces]);
+});
+
 Route::get('/settings/public', function () {
     $keys = ['kitchen_name', 'delivery_fee', 'delivery_fee_mandatory', 'estimated_delivery_time', 'qr_payment_info', 'qr_image', 'kitchen_phone', 'kitchen_address', 'min_order_amount', 'banner_enabled', 'banner_title', 'banner_subtitle', 'support_phone', 'reward_enabled', 'reward_orders_required', 'geofence_enabled', 'store_lat', 'store_lng', 'geofence_north', 'geofence_south', 'geofence_east', 'geofence_west', 'delivery_charge_presets', 'store_open_time', 'store_close_time', 'store_logo', 'terms_conditions', 'privacy_policy'];
     $settings = \App\Models\Setting::whereIn('key', $keys)->pluck('value', 'key');
@@ -184,6 +191,15 @@ Route::middleware(['auth:sanctum', 'verify.license'])->prefix('admin')->group(fu
     Route::post('/settings/qr-image', [AdminController::class, 'uploadQrImage']);
     Route::post('/settings/clear-cache', [AdminController::class, 'clearCache']);
     Route::get('/reviews', [AdminController::class, 'reviews']);
+
+    // Locations
+    Route::get('/locations', [AdminController::class, 'locations']);
+    Route::post('/provinces', [AdminController::class, 'createProvince']);
+    Route::put('/provinces/{id}', [AdminController::class, 'updateProvince']);
+    Route::delete('/provinces/{id}', [AdminController::class, 'deleteProvince']);
+    Route::post('/cities', [AdminController::class, 'createCity']);
+    Route::put('/cities/{id}', [AdminController::class, 'updateCity']);
+    Route::delete('/cities/{id}', [AdminController::class, 'deleteCity']);
 });
 
 /*

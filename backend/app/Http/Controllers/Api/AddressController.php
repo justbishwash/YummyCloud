@@ -22,6 +22,7 @@ class AddressController extends Controller
             'detail' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'city_id' => 'nullable|exists:cities,id',
         ]);
 
         // If first address, make it default
@@ -33,6 +34,7 @@ class AddressController extends Controller
             'detail' => $request->detail,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
+            'city_id' => $request->city_id,
             'is_default' => $isFirst,
         ]);
 
@@ -50,6 +52,7 @@ class AddressController extends Controller
             'address' => 'sometimes|string|max:255',
             'detail' => 'nullable|string|max:255',
             'is_default' => 'sometimes|boolean',
+            'city_id' => 'nullable|exists:cities,id',
         ]);
 
         if ($request->is_default) {
@@ -57,7 +60,7 @@ class AddressController extends Controller
             $request->user()->addresses()->where('id', '!=', $address->id)->update(['is_default' => false]);
         }
 
-        $address->update($request->only(['label', 'address', 'detail', 'is_default']));
+        $address->update($request->only(['label', 'address', 'detail', 'is_default', 'city_id']));
 
         return response()->json(['message' => 'Address updated.', 'address' => $address]);
     }

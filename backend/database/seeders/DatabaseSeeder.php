@@ -105,5 +105,7 @@ class DatabaseSeeder extends Seeder
             'min_order' => 250,
             'is_active' => true,
         ]);
+
+        $this->call(LocationSeeder::class);
     }
 }

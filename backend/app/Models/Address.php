@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    protected $fillable = ['user_id', 'label', 'address', 'detail', 'latitude', 'longitude', 'is_default'];
+    protected $fillable = ['user_id', 'city_id', 'label', 'address', 'detail', 'latitude', 'longitude', 'is_default'];
 
     protected function casts(): array
     {
@@ -16,5 +16,10 @@ class Address extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 }

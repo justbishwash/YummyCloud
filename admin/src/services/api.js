@@ -93,6 +93,15 @@ class AdminApi {
 
   // Delivery Partners
   getDeliveryPartners() { return this.request('/admin/delivery-partners'); }
+
+  // Locations
+  getLocations() { return this.request('/admin/locations'); }
+  createProvince(data) { return this.request('/admin/provinces', { method: 'POST', body: JSON.stringify(data) }); }
+  updateProvince(id, data) { return this.request(`/admin/provinces/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteProvince(id) { return this.request(`/admin/provinces/${id}`, { method: 'DELETE' }); }
+  createCity(data) { return this.request('/admin/cities', { method: 'POST', body: JSON.stringify(data) }); }
+  updateCity(id, data) { return this.request(`/admin/cities/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteCity(id) { return this.request(`/admin/cities/${id}`, { method: 'DELETE' }); }
 }
 
 const api = new AdminApi();

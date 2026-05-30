@@ -25,8 +25,11 @@ function Addresses() {
     detail: '',
     latitude: null,
     longitude: null,
+    city_id: '',
   });
   const [gettingLocation, setGettingLocation] = useState(false);
+  const [provinces, setProvinces] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -34,7 +37,17 @@ function Addresses() {
       return;
     }
     fetchAddresses();
+    fetchLocations();
   }, [isAuthenticated]);
+
+  const fetchLocations = async () => {
+    try {
+      const res = await api.getLocations();
+      setProvinces(res.provinces || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchAddresses = async () => {
     try {
@@ -106,9 +119,11 @@ function Addresses() {
         detail: formData.detail,
         latitude: formData.latitude,
         longitude: formData.longitude,
+        city_id: formData.city_id || null,
       });
       setAddresses([...addresses, res.address]);
-      setFormData({ label: 'Home', address: '', detail: '', latitude: null, longitude: null });
+      setFormData({ label: 'Home', address: '', detail: '', latitude: null, longitude: null, city_id: '' });
+      setSelectedProvince('');
       setShowForm(false);
     } catch (err) {
       console.error(err);
@@ -278,6 +293,52 @@ function Addresses() {
                   className="w-full border-2 border-gray-100 rounded-2xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors bg-gray-50/50 font-medium"
                 />
               </div>
+
+              {/* Province & City Selection */}
+              {provinces.length > 0 && (
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">Province</label>
+                    <select
+                      value={selectedProvince}
+                      onChange={(e) => {
+                        setSelectedProvince(e.target.value);
+                        setFormData({ ...formData, city_id: '' });
+                      }}
+                      className="w-full border-2 border-gray-100 rounded-2xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors bg-gray-50/50 font-medium appearance-none"
+                    >
+                      <option value="">Select Province</option>
+                      {provinces.map((p) => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {selectedProvince && (
+                    <div>
+                      <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 block">City</label>
+                      <select
+                        value={formData.city_id}
+                        onChange={(e) => setFormData({ ...formData, city_id: e.target.value })}
+                        className="w-full border-2 border-gray-100 rounded-2xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors bg-gray-50/50 font-medium appearance-none"
+                      >
+                        <option value="">Select City</option>
+                        {(provinces.find((p) => p.id === Number(selectedProvince))?.cities || []).map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}{Number(c.delivery_fee) > 0 ? ` (Delivery: Rs. ${c.delivery_fee})` : ''}
+                          </option>
+                        ))}
+                      </select>
+                      {formData.city_id && (() => {
+                        const city = provinces.find((p) => p.id === Number(selectedProvince))?.cities?.find((c) => c.id === Number(formData.city_id));
+                        return city && Number(city.delivery_fee) > 0 ? (
+                          <p className="text-xs text-primary mt-1.5 ml-1 font-medium">Delivery fee: Rs. {city.delivery_fee}</p>
+                        ) : null;
+                      })()}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* GPS Location (required) */}
               <div>
