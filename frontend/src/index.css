@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
-/* Custom theme - Red (Zomato-style) */
+/* Custom theme - Indigo Super App */
 @theme {
-  --color-primary: #e23744;
-  --color-primary-dark: #c62828;
-  --color-primary-light: #ff6659;
+  --color-primary: #5d61e4;
+  --color-primary-dark: #4a4ed0;
+  --color-primary-light: #7b7eef;
   --color-secondary: #1c1c1c;
   --color-accent: #f5a623;
   --color-success: #4caf50;
