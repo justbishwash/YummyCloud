@@ -348,6 +348,13 @@ class AdminController extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('menu-items', 'public');
         }
+        if ($request->hasFile('images')) {
+            $paths = [];
+            foreach ($request->file('images') as $file) {
+                $paths[] = $file->store('menu-items', 'public');
+            }
+            $data['images'] = $paths;
+        }
         $item = MenuItem::create($data);
         return response()->json(['item' => $item->load('category:id,name')], 201);
     }
@@ -357,6 +364,13 @@ class AdminController extends Controller
         $data = $request->only('name', 'name_ne', 'description', 'description_ne', 'price', 'category_id', 'is_veg', 'is_available', 'is_featured', 'is_reward');
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('menu-items', 'public');
+        }
+        if ($request->hasFile('images')) {
+            $paths = $item->images ?? [];
+            foreach ($request->file('images') as $file) {
+                $paths[] = $file->store('menu-items', 'public');
+            }
+            $data['images'] = $paths;
         }
         $item->update($data);
         return response()->json(['item' => $item->load('category:id,name')]);

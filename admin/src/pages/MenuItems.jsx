@@ -30,6 +30,9 @@ function MenuItems() {
       formData.append('is_featured', form.is_featured ? '1' : '0');
       formData.append('is_reward', form.is_reward ? '1' : '0');
       if (form.image) formData.append('image', form.image);
+      if (form.additionalImages) {
+        form.additionalImages.forEach((file) => formData.append('images[]', file));
+      }
 
       if (editItem) {
         formData.append('_method', 'PUT');
@@ -94,7 +97,7 @@ function MenuItems() {
                 <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_available} onChange={(e) => setForm({ ...form, is_available: e.target.checked })} className="accent-blue-600" /> Available</label>
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-600 mb-1 block">Image (optional)</label>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Main Image</label>
                 <div className="flex items-center gap-3">
                   {editItem?.image && !form.image && (
                     <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${editItem.image}`} alt="" className="w-12 h-12 rounded-lg object-cover border" />
@@ -104,6 +107,18 @@ function MenuItems() {
                   )}
                   <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files[0] || null })} className="text-xs" />
                 </div>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Additional Images (multiple)</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {editItem?.images?.map((img, i) => (
+                    <img key={i} src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${img}`} alt="" className="w-12 h-12 rounded-lg object-cover border" />
+                  ))}
+                  {form.additionalImages?.map((file, i) => (
+                    <img key={`new-${i}`} src={URL.createObjectURL(file)} alt="" className="w-12 h-12 rounded-lg object-cover border border-primary" />
+                  ))}
+                </div>
+                <input type="file" accept="image/*" multiple onChange={(e) => setForm({ ...form, additionalImages: Array.from(e.target.files) })} className="text-xs" />
               </div>
               <div className="flex gap-2 pt-2">
                 <button type="button" onClick={resetForm} className="flex-1 py-2 rounded-lg text-sm bg-gray-100 text-gray-600">Cancel</button>

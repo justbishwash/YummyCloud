@@ -18,6 +18,8 @@ function Menu() {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rewardData, setRewardData] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [slideIndex, setSlideIndex] = useState(0);
   const addItem = useCartStore((state) => state.addItem);
   const { isAuthenticated } = useAuthStore();
 
@@ -189,7 +191,8 @@ function Menu() {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-sm border border-gray-100"
+                onClick={() => { setSelectedItem(item); setSlideIndex(0); }}
+                className="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-sm border border-gray-100 cursor-pointer active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
                   {item.image ? (
@@ -229,6 +232,63 @@ function Menu() {
           </>
         )}
       </div>
+
+      {/* Item Detail Popup */}
+      {selectedItem && (() => {
+        const storageUrl = import.meta.env.VITE_API_URL?.replace('/api', '') + '/storage/';
+        const allImages = [];
+        if (selectedItem.image) allImages.push(selectedItem.image);
+        if (selectedItem.images) allImages.push(...selectedItem.images);
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedItem(null)} />
+            <div className="relative bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[85vh] overflow-y-auto">
+              {/* Image Slider */}
+              {allImages.length > 0 && (
+                <div className="relative">
+                  <div className="w-full h-56 overflow-hidden rounded-t-3xl sm:rounded-t-2xl bg-gray-100">
+                    <img src={`${storageUrl}${allImages[slideIndex] || allImages[0]}`} alt="" className="w-full h-full object-cover" />
+                  </div>
+                  {allImages.length > 1 && (
+                    <>
+                      <button onClick={(e) => { e.stopPropagation(); setSlideIndex((slideIndex - 1 + allImages.length) % allImages.length); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                      </button>
+                      <button onClick={(e) => { e.stopPropagation(); setSlideIndex((slideIndex + 1) % allImages.length); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      </button>
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                        {allImages.map((_, i) => (
+                          <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === slideIndex ? 'bg-white' : 'bg-white/50'}`} />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  <button onClick={() => setSelectedItem(null)} className="absolute top-3 right-3 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow">
+                    <HiOutlineXMark className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="p-5">
+                <h2 className="text-lg font-bold text-gray-800">{selectedItem.name}</h2>
+                <p className="text-xl font-bold text-primary mt-1">Rs. {Number(selectedItem.price)}</p>
+                {selectedItem.description && (
+                  <p className="text-sm text-gray-500 mt-3 leading-relaxed">{selectedItem.description}</p>
+                )}
+                <button
+                  onClick={() => { handleAddToCart(selectedItem); setSelectedItem(null); }}
+                  className="w-full mt-5 bg-primary text-white py-3 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
+                >
+                  + Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
