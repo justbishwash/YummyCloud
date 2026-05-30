@@ -33,7 +33,7 @@ function Home() {
   const [storeOpenTime, setStoreOpenTime] = useState('');
   const [notice, setNotice] = useState(null);
 
-  useEffect(() => { document.title = `${appName || 'CloudKitchen'} - Order Food Online`; }, [appName]);
+  useEffect(() => { document.title = `${appName || 'CloudKitchen'} - Order Online`; }, [appName]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +53,6 @@ function Home() {
         if (s.notice_enabled === 'true' && s.notice_text) {
           setNotice(s.notice_text);
         }
-        // Check if store is open
         if (s.store_open_time && s.store_close_time) {
           const now = new Date();
           const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -115,7 +114,7 @@ function Home() {
             className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-3.5 border border-white/10"
           >
             <HiOutlineMagnifyingGlass className="w-5 h-5 text-white/60" />
-            <span className="text-sm text-white/60">Search for dishes...</span>
+            <span className="text-sm text-white/60">Search for products & services...</span>
           </Link>
         </div>
       </header>
@@ -125,7 +124,6 @@ function Home() {
         <div className="px-4 mt-4">
           <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 relative overflow-hidden shadow-lg">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-10 translate-x-10" />
-            <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full translate-y-8 -translate-x-8" />
             <div className="relative z-10 flex items-center gap-4">
               <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shrink-0">
                 <HiOutlineMoon className="w-6 h-6 text-white/80" />
@@ -139,10 +137,6 @@ function Home() {
                     return `${h > 12 ? h - 12 : h}:${m} ${h >= 12 ? 'PM' : 'AM'}`;
                   })() : 'later'}
                 </p>
-                <div className="flex items-center gap-1.5 mt-2">
-                  <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] text-white/50">Ordering is paused</span>
-                </div>
               </div>
             </div>
           </div>
@@ -164,7 +158,6 @@ function Home() {
         <section className="px-4 mt-4">
           <div className="bg-gradient-to-r from-primary to-primary-dark rounded-2xl p-5 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
-            <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-6 -translate-x-6" />
             <div className="relative z-10">
               <p className="text-[10px] font-semibold uppercase tracking-wider opacity-80">Offers</p>
               <p className="text-lg font-bold mt-1.5">{banner.title}</p>
@@ -174,93 +167,80 @@ function Home() {
         </section>
       )}
 
-      {/* Categories */}
+      {/* Services / Categories Grid - Super App Style */}
       <section className="px-4 mt-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-gray-800">Categories</h2>
-          <Link to="/menu" className="text-xs text-primary font-semibold">See All</Link>
-        </div>
+        <h2 className="text-base font-bold text-gray-800 mb-3">What do you need?</h2>
         {loading ? (
-          <div className="flex gap-3 overflow-x-auto no-scrollbar">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="bg-gray-100 rounded-2xl w-20 h-24 shrink-0 animate-pulse" />
+          <div className="grid grid-cols-3 gap-3">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-2xl h-28 animate-pulse" />
             ))}
           </div>
         ) : (
-          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+          <div className="grid grid-cols-3 gap-3">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 to={`/menu?category=${cat.id}`}
-                className="flex flex-col items-center gap-2 shrink-0 w-[72px] active:scale-95 transition-transform"
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden active:scale-95 transition-transform"
               >
-                <div className="w-[60px] h-[60px] rounded-2xl shadow-sm border border-gray-100 overflow-hidden bg-gray-50">
+                <div className="w-full h-16 bg-gray-50 overflow-hidden">
                   {cat.image ? (
                     <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${cat.image}`} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                      <span className="text-2xl">{cat.icon || '🍽️'}</span>
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                      <span className="text-2xl">{cat.icon || '📦'}</span>
                     </div>
                   )}
                 </div>
-                <span className="text-[11px] font-medium text-gray-600 text-center leading-tight line-clamp-2">
-                  {cat.name}
-                </span>
+                <div className="px-2 py-2">
+                  <p className="text-[11px] font-semibold text-gray-700 text-center leading-tight line-clamp-2">{cat.name}</p>
+                </div>
               </Link>
             ))}
           </div>
         )}
       </section>
 
-      {/* Popular Dishes */}
-      <section className="px-4 mt-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-gray-800">Popular Dishes</h2>
-          <Link to="/menu" className="text-xs text-primary font-semibold">
-            View All
-          </Link>
-        </div>
-        {loading ? (
-          <div className="grid grid-cols-2 gap-3">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-gray-100 rounded-2xl h-48 animate-pulse" />
-            ))}
+      {/* Popular / Featured Items */}
+      {popularDishes.length > 0 && (
+        <section className="px-4 mt-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-gray-800">Popular</h2>
+            <Link to="/menu" className="text-xs text-primary font-semibold">View All</Link>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {popularDishes.map((dish) => (
+          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+            {popularDishes.slice(0, 8).map((dish) => (
               <div
                 key={dish.id}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden shrink-0 w-[150px]"
               >
-                <div className="w-full h-28 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div className="w-full h-24 bg-gray-100 overflow-hidden">
                   {dish.image ? (
                     <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${dish.image}`} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <svg className="w-10 h-10 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-12.75H6A2.25 2.25 0 003.75 6v12a2.25 2.25 0 002.25 2.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75z" /></svg>
+                    <div className="w-full h-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-12.75H6A2.25 2.25 0 003.75 6v12a2.25 2.25 0 002.25 2.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75z" /></svg>
+                    </div>
                   )}
                 </div>
-                <div className="p-3">
-                  <h3 className="font-semibold text-gray-800 text-sm truncate">
-                    {dish.name}
-                  </h3>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="font-bold text-gray-900 text-sm">
-                      Rs. {Number(dish.price)}
-                    </span>
+                <div className="p-2.5">
+                  <h3 className="font-semibold text-gray-800 text-xs truncate">{dish.name}</h3>
+                  <div className="flex items-center justify-between mt-1.5">
+                    <span className="font-bold text-gray-900 text-xs">Rs. {Number(dish.price)}</span>
                     <button
                       onClick={() => handleAddToCart(dish)}
-                      className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white active:scale-90 transition-transform shadow-sm shadow-primary/20"
+                      className="w-6 h-6 bg-primary rounded-md flex items-center justify-center text-white active:scale-90 transition-transform"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.5v15m7.5-7.5h-15" /></svg>
                     </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        )}
-      </section>
+        </section>
+      )}
     </div>
   );
 }
