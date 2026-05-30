@@ -216,7 +216,7 @@ function Menu() {
                       Rs. {Number(item.price)}
                     </span>
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleAddToCart(item); }}
+                      onClick={(e) => { e.stopPropagation(); if (item.variants && item.variants.length > 0) { setSelectedItem(item); setSlideIndex(0); setSelectedVariants({}); } else { handleAddToCart(item); } }}
                       className="bg-primary/10 text-primary text-xs px-3.5 py-1.5 rounded-lg font-bold active:scale-90 active:bg-primary active:text-white transition-all"
                     >
                       + ADD
