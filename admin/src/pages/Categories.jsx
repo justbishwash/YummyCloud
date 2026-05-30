@@ -5,21 +5,12 @@ import api from '../services/api';
 function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ name: '', name_ne: '', icon: '', image: null, imagePreview: '' });
+  const [form, setForm] = useState({ name: '', name_ne: '', image: null, imagePreview: '' });
   const [showForm, setShowForm] = useState(false);
-  const [showIconPicker, setShowIconPicker] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
-
-  const foodEmojis = [
-    '🥟', '🍚', '🍜', '🥤', '🍿', '🍰', '🍕', '🍔', '🌮', '🌯',
-    '🥗', '🍝', '🍛', '🍲', '🥘', '🍱', '🍣', '🍤', '🥩', '🍗',
-    '🍖', '🥚', '🧀', '🥐', '🍞', '🥪', '🌭', '🍟', '🥓', '🍳',
-    '🥞', '🧇', '🥯', '🍩', '🍪', '🎂', '🍫', '🍬', '🍭', '🍮',
-    '🍦', '🧁', '☕', '🍵', '🧃', '🥛', '🍺', '🍷', '🧊', '🍽️',
-  ];
 
   useEffect(() => { api.getCategories().then((res) => setCategories(res.categories || [])).catch(console.error).finally(() => setLoading(false)); }, []);
 
@@ -31,7 +22,6 @@ function Categories() {
       const formData = new FormData();
       formData.append('name', form.name);
       if (form.name_ne) formData.append('name_ne', form.name_ne);
-      if (form.icon) formData.append('icon', form.icon);
       if (form.image) formData.append('image', form.image);
 
       if (editingId) {
@@ -51,13 +41,13 @@ function Categories() {
   };
 
   const handleEdit = (cat) => {
-    setForm({ name: cat.name || '', name_ne: cat.name_ne || '', icon: cat.icon || '', image: null, imagePreview: cat.image || '' });
+    setForm({ name: cat.name || '', name_ne: cat.name_ne || '', image: null, imagePreview: cat.image || '' });
     setEditingId(cat.id);
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setForm({ name: '', name_ne: '', icon: '', image: null, imagePreview: '' });
+    setForm({ name: '', name_ne: '', image: null, imagePreview: '' });
     setEditingId(null);
     setShowForm(false);
   };
@@ -84,23 +74,6 @@ function Categories() {
               <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name (English)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" required />
               <input type="text" value={form.name_ne} onChange={(e) => setForm({ ...form, name_ne: e.target.value })} placeholder="Name (Nepali)" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary" />
               <div>
-                <label className="text-xs font-medium text-gray-600 mb-1 block">Icon</label>
-                <div className="relative">
-                  <button type="button" onClick={() => setShowIconPicker(!showIconPicker)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full text-left hover:border-primary">
-                    {form.icon ? `${form.icon} Selected` : 'Choose an icon'}
-                  </button>
-                  {showIconPicker && (
-                    <div className="absolute top-full mt-1 left-0 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-2 w-full grid grid-cols-10 gap-1">
-                      {foodEmojis.map((emoji) => (
-                        <button key={emoji} type="button" onClick={() => { setForm({ ...form, icon: emoji }); setShowIconPicker(false); }} className="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 text-lg">
-                          {emoji}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div>
                 <label className="text-xs font-medium text-gray-600 mb-1 block">Category Image</label>
                 <div className="flex items-center gap-3">
                   {(form.imagePreview || form.image) && (
@@ -124,14 +97,13 @@ function Categories() {
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         {loading ? <div className="p-8 text-center text-gray-400">Loading...</div> : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs text-gray-500 uppercase"><tr><th className="px-4 py-3 text-left">Image</th><th className="px-4 py-3 text-left">Icon</th><th className="px-4 py-3 text-left">Name</th><th className="px-4 py-3 text-left">Nepali</th><th className="px-4 py-3 text-center">Actions</th></tr></thead>
+            <thead className="bg-gray-50 text-xs text-gray-500 uppercase"><tr><th className="px-4 py-3 text-left">Image</th><th className="px-4 py-3 text-left">Name</th><th className="px-4 py-3 text-left">Nepali</th><th className="px-4 py-3 text-center">Actions</th></tr></thead>
             <tbody className="divide-y divide-gray-100">
               {categories.map((cat) => (
                 <tr key={cat.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     {cat.image ? <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/storage/${cat.image}`} alt="" className="w-10 h-10 rounded-lg object-cover border border-gray-100" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg" />}
                   </td>
-                  <td className="px-4 py-3 text-xl">{cat.icon}</td>
                   <td className="px-4 py-3 font-medium">{cat.name}</td>
                   <td className="px-4 py-3 text-gray-500">{cat.name_ne}</td>
                   <td className="px-4 py-3 text-center">
