@@ -190,38 +190,38 @@ function Home() {
 
       {/* Why Choose Us */}
       <section className="px-4 mt-6">
-        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-10 translate-x-10" />
-          <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full translate-y-8 -translate-x-8" />
+        <div className="bg-gradient-to-br from-primary to-primary-dark rounded-2xl p-5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-10 translate-x-10" />
+          <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/10 rounded-full translate-y-8 -translate-x-8" />
           <div className="relative z-10">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/50">Why choose us</p>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">Why choose us</p>
             <div className="grid grid-cols-2 gap-3 mt-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
-                  <HiOutlineBolt className="w-4 h-4 text-blue-400" />
+                <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
+                  <HiOutlineBolt className="w-4 h-4 text-white" />
                 </div>
                 <p className="text-[11px] font-medium text-white/90">39 Min Delivery</p>
               </div>
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center shrink-0">
-                  <HiOutlineCurrencyDollar className="w-4 h-4 text-green-400" />
+                <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
+                  <HiOutlineCurrencyDollar className="w-4 h-4 text-white" />
                 </div>
                 <p className="text-[11px] font-medium text-white/90">Best Prices</p>
               </div>
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center shrink-0">
-                  <HiOutlineGlobeAlt className="w-4 h-4 text-purple-400" />
+                <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
+                  <HiOutlineGlobeAlt className="w-4 h-4 text-white" />
                 </div>
                 <p className="text-[11px] font-medium text-white/90">Nationwide</p>
               </div>
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center shrink-0">
-                  <HiOutlineShieldCheck className="w-4 h-4 text-amber-400" />
+                <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
+                  <HiOutlineShieldCheck className="w-4 h-4 text-white" />
                 </div>
                 <p className="text-[11px] font-medium text-white/90">Secure Pay</p>
               </div>
             </div>
-            <p className="text-[9px] text-white/30 mt-4">*T&C Applied. Delivery time varies by location.</p>
+            <p className="text-[9px] text-white/40 mt-4">*T&C Applied. Delivery time varies by location.</p>
           </div>
         </div>
       </section>

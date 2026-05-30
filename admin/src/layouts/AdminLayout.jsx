@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 const navItems = [
   { to: '/', icon: HiOutlineHome, label: 'Dashboard', end: true },
   { to: '/orders', icon: HiOutlineClipboardDocumentList, label: 'Orders' },
-  { to: '/menu', icon: HiOutlineSquares2X2, label: 'Menu' },
+  { to: '/menu', icon: HiOutlineSquares2X2, label: 'Products' },
   { to: '/categories', icon: HiOutlineSquares2X2, label: 'Categories' },
   { to: '/coupons', icon: HiOutlineTag, label: 'Coupons' },
   { to: '/users', icon: HiOutlineUsers, label: 'Customers' },
@@ -58,7 +58,7 @@ function AdminLayout() {
   }, []);
 
   useEffect(() => {
-    const titles = { '/': 'Dashboard', '/orders': 'Orders', '/menu': 'Menu Items', '/categories': 'Categories', '/coupons': 'Coupons', '/users': 'Customers', '/delivery-partners': 'Delivery Partners', '/messages': 'Messages', '/refunds': 'Refunds', '/reviews': 'Reviews', '/sales': 'Sales Report', '/settings': 'Settings' };
+    const titles = { '/': 'Dashboard', '/orders': 'Orders', '/menu': 'Products', '/categories': 'Categories', '/coupons': 'Coupons', '/users': 'Customers', '/delivery-partners': 'Delivery Partners', '/locations': 'Locations', '/messages': 'Messages', '/refunds': 'Refunds', '/reviews': 'Reviews', '/sales': 'Sales Report', '/settings': 'Settings' };
     const title = titles[location.pathname] || 'Admin';
     document.title = `${title} - ${kitchenName} Admin`;
   }, [location.pathname, kitchenName]);

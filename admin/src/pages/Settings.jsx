@@ -15,9 +15,9 @@ const tabs = [
 
 const settingsConfig = {
   store: [
-    { key: 'kitchen_name', label: 'Kitchen / Restaurant Name', type: 'text', placeholder: 'e.g. YummyCloud Kitchen' },
-    { key: 'kitchen_phone', label: 'Kitchen Phone', type: 'text', placeholder: '9800000000' },
-    { key: 'kitchen_address', label: 'Kitchen Address', type: 'text', placeholder: 'e.g. Kathmandu, Nepal' },
+    { key: 'kitchen_name', label: 'Store Name', type: 'text', placeholder: 'e.g. My Super Store' },
+    { key: 'kitchen_phone', label: 'Store Phone', type: 'text', placeholder: '9800000000' },
+    { key: 'kitchen_address', label: 'Store Address', type: 'text', placeholder: 'e.g. Biratnagar, Nepal' },
     { key: 'support_phone', label: 'Support Phone (WhatsApp)', type: 'text', placeholder: '9800000000' },
     { key: 'store_logo', label: 'Store Logo', type: 'file' },
     { key: 'store_open_time', label: 'Store Opening Time (24hr)', type: 'text', placeholder: '12:00', hint: 'e.g. 12:00 for 12 PM' },

@@ -76,7 +76,7 @@ function MenuItems() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-gray-800">Menu Items</h1>
+        <h1 className="text-xl font-bold text-gray-800">Products</h1>
         <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-1 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
           <HiOutlinePlus className="w-4 h-4" /> Add Item
         </button>

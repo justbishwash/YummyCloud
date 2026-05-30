@@ -25,7 +25,7 @@ function CustomerLayout() {
     },
     {
       to: '/menu',
-      label: "Menu",
+      label: "Products",
       icon: HiOutlineSquares2X2,
       activeIcon: HiSquares2X2,
     },

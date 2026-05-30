@@ -83,7 +83,7 @@ function Menu() {
   return (
     <div className="pb-4 bg-gray-50 min-h-screen">
       <TopNav
-        title="Menu"
+        title="Products"
         showBack={true}
       />
 
