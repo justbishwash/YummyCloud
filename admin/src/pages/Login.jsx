@@ -10,7 +10,7 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [kitchenName, setKitchenName] = useState('CloudKitchen');
+  const [kitchenName, setKitchenName] = useState('Zust Mart');
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL?.replace('/api', '')}/api/settings/public`)

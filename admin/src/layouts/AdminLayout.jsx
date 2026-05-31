@@ -23,7 +23,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [kitchenName, setKitchenName] = useState('CloudKitchen');
+  const [kitchenName, setKitchenName] = useState('Zust Mart');
   const [licenseToast, setLicenseToast] = useState(null);
 
   useEffect(() => {

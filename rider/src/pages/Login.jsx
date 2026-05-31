@@ -117,7 +117,7 @@ function Login() {
         </form>
 
         <p className="text-center text-[11px] text-gray-400 mt-8">
-          {kitchenName || 'CloudKitchen'} &middot; Rider App
+          {kitchenName || 'Zust Mart'} &middot; Rider App
         </p>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import api from '../services/api';
 
 const useAppStore = create((set) => ({
-  appName: localStorage.getItem('app_name') || 'CloudKitchen',
+  appName: localStorage.getItem('app_name') || 'Zust Mart',
   settings: {},
   loaded: false,
 
@@ -10,7 +10,7 @@ const useAppStore = create((set) => ({
     try {
       const res = await api.getPublicSettings();
       const s = res.settings || {};
-      const name = s.kitchen_name || 'CloudKitchen';
+      const name = s.kitchen_name || 'Zust Mart';
       localStorage.setItem('app_name', name);
       set({ appName: name, settings: s, loaded: true });
     } catch {

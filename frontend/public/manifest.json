@@ -1,16 +1,16 @@
 {
-  "name": "CloudKitchen",
-  "short_name": "CloudKitchen",
-  "description": "Order delicious food from CloudKitchen",
+  "name": "Zust Mart",
+  "short_name": "Zust Mart",
+  "description": "Everything you need, delivered — Zust Mart",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#e23744",
+  "theme_color": "#0038d1",
   "orientation": "portrait",
-  "categories": ["food", "shopping"],
+  "categories": ["shopping", "lifestyle"],
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/zustmart.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
